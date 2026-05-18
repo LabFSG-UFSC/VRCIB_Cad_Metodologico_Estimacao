@@ -24,6 +24,13 @@ book:
     - 99_apendice1.qmd
     - 98_apendice2.qmd
     - 97_apendice3.qmd
+  page-footer: 
+    left: "© 2026 UFSC"
+    center: "![](img/Logo com RFB e UFSC.png){width=250px}"
+  downloads: [pdf, epub]
+  repo-url: https://github.com/LabFSG-UFSC/VRCIB_Caderno_Metodologico/
+  repo-actions: [edit]
+  sharing: [twitter, facebook]
 
 bibliography: references.bib
 csl: ABNT_UFPR_2011-Mendeley.csl
