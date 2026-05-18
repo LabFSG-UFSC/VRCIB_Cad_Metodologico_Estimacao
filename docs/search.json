@@ -1,0 +1,62 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Caderno Metodológico",
+    "section": "",
+    "text": "Apresentação\nTrata-se de um caderno metodológico para o projeto do Valor de Referência do Cadastro Imobiliário Brasileiro (CIB)",
+    "crumbs": [
+      "Apresentação"
+    ]
+  },
+  {
+    "objectID": "01_intro.html",
+    "href": "01_intro.html",
+    "title": "1  Introdução",
+    "section": "",
+    "text": "Neste caderno …",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introdução</span>"
+    ]
+  },
+  {
+    "objectID": "02_omi.html",
+    "href": "02_omi.html",
+    "title": "2  Observatório do Mercado Imobiário",
+    "section": "",
+    "text": "Na Etapa de Observação do Mercado Imobiliário foram utilizados os métodos descritos nas seções x à y.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Observatório do Mercado Imobiário</span>"
+    ]
+  },
+  {
+    "objectID": "03_carto.html",
+    "href": "03_carto.html",
+    "title": "3  Bases Cartográficas Territoriais",
+    "section": "",
+    "text": "Na Etapa de geração de Bases Cartográficas Territoriais foram utilizados os métodos descritos nas seções x à y.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Bases Cartográficas Territoriais</span>"
+    ]
+  },
+  {
+    "objectID": "04_est.html",
+    "href": "04_est.html",
+    "title": "4  Modelagem e Plantas de Valores Genéricos",
+    "section": "",
+    "text": "Na Etapa de Modelagem e Plantas de Valores Genéricos foram utilizados os métodos descritos nas seções x à y.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Modelagem e Plantas de Valores Genéricos</span>"
+    ]
+  },
+  {
+    "objectID": "05_conclusao.html",
+    "href": "05_conclusao.html",
+    "title": "5  Conclusão",
+    "section": "",
+    "text": "Neste caderno mostrou-se …",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Conclusão</span>"
+    ]
+  }
+]

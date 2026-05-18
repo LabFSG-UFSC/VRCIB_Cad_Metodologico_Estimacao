@@ -1,0 +1,4 @@
+# Modelagem e Plantas de Valores Genéricos
+
+Na Etapa de Modelagem e Plantas de Valores Genéricos foram utilizados os métodos 
+descritos nas seções x à y.

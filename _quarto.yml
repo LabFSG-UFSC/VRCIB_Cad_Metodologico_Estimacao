@@ -1,25 +1,42 @@
 project:
   type: book
+  output-dir: docs
 
+lang: pt-br
+  
+toc: true
+toc-depth: 4  
+  
 book:
-  title: "Caderno_Metodologico"
-  author: "Norah Jones"
-  date: "5/18/2026"
+  title: "Caderno Metodológico"
+  author: "Equipe UFSC"
+  date: today
+  date-format: "MMMM, YYYY"
   chapters:
     - index.qmd
-    - intro.qmd
-    - summary.qmd
+    - 01_intro.qmd
+    - 02_omi.qmd
+    - 03_carto.qmd
+    - 04_est.qmd
+    - 05_conclusao.qmd
     - references.qmd
+  appendices:
+    - 99_apendice1.qmd
+    - 98_apendice2.qmd
+    - 97_apendice3.qmd
 
 bibliography: references.bib
+csl: ABNT_UFPR_2011-Mendeley.csl
+link-citations: true
 
 format:
   html:
+    css: [styles.css, cover-style.css]
     theme:
       - cosmo
       - brand
   pdf:
     documentclass: scrreprt
 
-
+editor: source
 

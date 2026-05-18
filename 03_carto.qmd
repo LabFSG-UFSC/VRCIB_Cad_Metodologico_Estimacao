@@ -1,0 +1,4 @@
+# Bases Cartográficas Territoriais
+
+Na Etapa de geração de Bases Cartográficas Territoriais foram utilizados os 
+métodos descritos nas seções x à y.
