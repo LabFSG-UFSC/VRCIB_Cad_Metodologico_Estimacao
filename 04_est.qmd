@@ -10,7 +10,7 @@ preferência aos estimadores com maiores *breakdown-points*, como estimador de
 mínimos quadrados aparados e os MM-estimadores. A escolha do método dos mínimos
 quadrados ponderados foi feita com o intuito de evitar a remoção desnecessária 
 de muitos pontos falsos *outliers* da amostra. Para entender, considere-se os
-gráficos das Figuras -@fig-bagplot e -@fig-bagplot2 [^1].
+*bagplots* (ou diagramas de saco) das Figuras -@fig-bagplot e -@fig-bagplot2[^1].
 
 [^1]: O *bagplot* é uma generalização do *boxplot* para duas dimensões, proposto
 por @Bagplot1999, baseado nos conceitos de Profundidade de Tukey, ou 
@@ -78,6 +78,10 @@ LTS$lts.wt
 fit1 <- update(fit, weights = LTS$lts.wt)
 plot(fit1)
 ```
+
+Os conceitos de profundidade estatística e mediana profunda podem ser extendidos
+para outras dimensões. O algoritmo para o cômputo eficiente destas estatísticas
+pode ser visto em @Struyf2000.
 
 O método dos mínimos quadrados aparados, como veremos na próxima seção, ajusta
 um modelo de regressão robusto em 50% dos pontos mais profundos da amostra.
