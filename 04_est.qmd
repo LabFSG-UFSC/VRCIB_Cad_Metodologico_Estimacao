@@ -2,3 +2,202 @@
 
 Na Etapa de Modelagem e Plantas de Valores Genéricos foram utilizados os métodos 
 descritos nas seções x à y.
+
+## Métodos de limpeza de dados
+
+A limpeza dos dados é feita com métodos robustos de estimação, dando-se 
+preferência aos estimadores com maiores *breakdown-points*, como estimador de 
+mínimos quadrados aparados e os MM-estimadores. A escolha do método dos mínimos
+quadrados ponderados foi feita com o intuito de evitar a remoção desnecessária 
+de muitos pontos falsos *outliers* da amostra. Para entender, considere-se os
+gráficos das Figuras -@fig-bagplot e -@fig-bagplot2 [^1].
+
+[^1]: O *bagplot* é uma generalização do *boxplot* para duas dimensões, proposto
+por @Bagplot1999, baseado nos conceitos de Profundidade de Tukey, ou 
+Profundidade do meio-espaço e na mediana profunda, ou mediana bivariada [@Tukey1975].
+
+Na @fig-bagplot podem ser vistos os diagramas de caixa de cada variável, às
+margens do gráfico principal, em que é possível notar uma assimetria na amostra:
+existe uma série de pontos à direita da distribuição de ambas as variáveis
+classificados como *outliers* pelo critério do *boxplot* 
+($Q_3 + 1,5 \cdot \text{IQR}$). O gráfico *bagplot* da @fig-bagplot, no entanto,
+em que 50% dos dados se encontram dentro do primeiro *bag*, de cor mais escura,
+e cuja área que separa os *outliers* dos *inliers* é exibida em cor cinza-clara,
+mostra que apenas 4 pontos foram classificados como *outliers*. Note-se ainda 
+que dois dos pontos classificados como *outliers* pelo critério do *bagplot* não
+foram identificado pelo critério do *boxplot*.
+
+Já na @fig-bagplot2, em que as variáveis explicativas apresentam distribuição
+mais simétrica, pois as variáveis encontram-se transformadas para a obtenção da
+normalidade, pode-se notar que o critério dos *boxplots* implicaria remover uma 
+série de pontos em ambos os lados da distribuição das variáveis, enquanto o
+critério do *bagplot* mostra que, novamente, apenas alguns pontos precisam de
+fato ser removidos da amostra para uma boa modelagem.
+
+```{r}
+#| label: fig-bagplot
+#| fig-cap: "Bagplot. Preços Totais"
+library(wooldridge)
+library(aplpack)
+library(ggplot2)
+library(ggthemes)
+theme_set(theme_bw())
+library(gggda)
+library(ggExtra)
+data(hprice1)
+hprice1 <- within(hprice1, PU <- price/lotsize)
+# bagplot(hprice1$sqrft, hprice1$price, show.whiskers = FALSE, dkmethod = 2,
+#         las = 1,
+#         xlab = "Área Construída (sq. feet)", ylab = "Preço (milhares de US$)",
+#         main = "Bagplot - Preço de Venda vs Área Construída", pch = 19
+#         )
+plt0 <- 
+  ggplot(hprice1, aes(x = sqrft, y = price)) +
+  geom_bagplot(fraction = .5, coef = 3) +
+  geom_point(pch = 16)  
+ggMarginal(plt0, type = 'boxplot')
+```
+
+```{r}
+#| label: fig-bagplot2
+#| fig-cap: "Bagplot. Preços Unitários."
+plt <- 
+  ggplot(hprice1, aes(x = log(lotsize), y = log(PU))) +
+  geom_bagplot(fraction = .5, coef = 3) +
+  geom_point(pch = 16) 
+ggMarginal(plt, type = 'boxplot')
+```
+
+```{r}
+#| eval: false
+fit <- lm(log(PU) ~ log(lotsize), data = hprice1)
+plot(fit)
+library(robustbase)
+LTS <- ltsReg(log(PU) ~ log(lotsize), data = hprice1)
+LTS$lts.wt
+fit1 <- update(fit, weights = LTS$lts.wt)
+plot(fit1)
+```
+
+O método dos mínimos quadrados aparados, como veremos na próxima seção, ajusta
+um modelo de regressão robusto em 50% dos pontos mais profundos da amostra.
+
+
+### O método dos mínimos quadrados aparados
+
+Os dados oriundos do observatório do mercado imobiliário são usualmente limpos 
+com o auxílio de regressão robusta. Para melhor compreensão do método dos mínimos
+quadrados aparados, pode-se compará-lo com o método dos mínimos quadrados 
+ordinários em que o quadrado dos resíduos, $r_i$, são minimizados:
+
+$$\hat\beta_{\text{OLS}} = \min S(\boldsymbol \beta) = \sum_{i=1}^n r_i^2(\boldsymbol \beta)$$ {#eq-OLS}
+
+Considerando que os resíduos são obtidos através de um modelo de regressão tal
+como o da @eq-regressao:
+
+$$\mathbf y = \mathbf X \boldsymbol \beta + \mathbf u$$ {#eq-regressao}
+
+Então a @eq-OLS pode ser reescrita da seguinte maneira:
+
+$$\boldsymbol{\hat\beta_{\text{OLS}}} = \arg\min\limits_{\boldsymbol \beta} (\mathbf y - \mathbf X \boldsymbol \beta)^2$$ {#eq-OLS2}
+
+Já a regressão robusta pode ser ajustada de diversas maneiras, com a aplicação
+de uma função, $\rho$, dos resíduos diferentes da função quadrática, como
+ilustrado na @eq-RLS. O mais natural seria utilizar o absoluto dos resíduos, em
+lugar do seu quadrado. Porém, a função absoluto, $abs(t)$, não possui
+propriedades desejáveis (não é uma função derivável em $t = 0$, o que dificulta
+o processo de minimização). Por isso é mais comum a utilização de uma função
+como o *M-Estimador* de Huber [@Huber1964], da @eq-HLoss.
+
+$$\boldsymbol{\hat\beta_{\text{RLS}}} =  \arg\min\limits_{\boldsymbol \beta} \rho(\mathbf y - \mathbf X \boldsymbol \beta)$$ {#eq-RLS}
+
+Deve-se notar que a função de Huber equivale aproximadamente a um processo de
+*Winsorização* os resíduos, ou seja, a partir de um determinado valor de $k$ (em
+geral igual a 1,5) os resíduos são alterados de forma que para $|r_i| > k$ a
+função de minimização equivale a tomar o valor absoluto dos resíduos e para
+resíduos em que $r_i \leq k$ são tomados os resíduos quadráticos.
+
+$$
+\rho_{Huber}(t) = \begin{cases}
+\frac{1}{2} t^2 & |t| \leq k\\
+k|t| - \frac{1}{2} k^2& |t| >k
+\end{cases}
+$$ {#eq-HLoss}
+
+Diversas outras funções foram propostas para a @eq-RLS, como a função
+*biweight* de Tukey. No entanto, este método de estimação padece do
+problema de não ser robusto a *outliers* nas variáveis explicativas, porém
+apenas a *outliers* presentes na variável dependente (no caso, imóveis de
+valores muito mais altos ou mais baixos do que os que seria previstos pelos
+modelos).
+
+Para dar conta dos *outliers* presentes nas variáveis explicativas,
+@Rousseeuw_least_1984 propôs dois estimadores: o estimador **LMS** (*Least
+  Median of Squares*), que minimiza **a mediana** dos resíduos quadráticos, e o
+  estimador LTS (*Least Trimmed Squares*, ou Mínimos Quadrados Aparados), que
+  minimiza o quadrado dos resíduos, porém apenas para os "bons" pontos da
+  amostra:
+
+$$
+\beta_{LTS} = \underset{\boldsymbol \beta}{\arg \min} \sum_{i=1}^h (\mathbf y - \mathbf X\boldsymbol \beta)^2_{i:n}
+$$ {#eq-LTS}
+
+Resumidamente, o estimador LTS da @eq-LTS utiliza aproximadamente apenas $h$
+pontos da amostra (em geral, $h \approx 0,5\cdot n$) para um ajuste mais
+estável, e calcula os resíduos de cada ponto da amostra em relação à esta reta
+de regressão robusta. Após o cálculo dos resíduos os pontos são classificados
+como "bons" (pontos cujos resíduos padronizados são menores que 2,5 em módulo)
+ou "ruins" (em que $|r_i| > 2,5$). Por questões computacionais, a princípio o
+estimador LMS foi adotado em detrimento do estimador LTS. No entanto, com o
+desenvolvimento da capacidade de processamento dos computadores, o método LTS
+tornou-se mais popular e, por isso, foi o escolhido para a limpeza de dados
+neste projeto.
+
+### MM-estimadores
+
+Os MM-estimadores foram primeiramente apresentados por @Yohai1987.
+
+Assim como o estimador de mínimos quadrados aparados, os MM-estimadores podem
+apresentar o valor máximo para o *breakdown-point* (0,5), na condição em que
+os resíduos tenham distribuição normal [@Yohai1987].
+
+Segundo @Yohai1987, os MM-estimadores são obtidos em três estágios. No primeiro,
+um modelo de regressão robusta com alto *breakdown-point*, como o dos mínimos
+quadrados aparados, é estimado. Com o modelo obtido no primeiro estágio, então,
+são computados os resíduos e, com estes, por sua vez, um estimador robusto de
+escala dos resíduos é obtido.
+
+## Métodos de classificação
+
+Para este projeto foram utilizados métodos de classificação ou *clusterização* 
+robustos. Assim como no caso da regressão robusta, é mais fácil compreender os 
+métodos de classificação robusta quando comparámo-los aos métodos clássicos de 
+classificação, como o método *K-means*.
+
+### *K-means*
+
+O método *K-means* consiste na minimização da distância quadrática entre os
+pontos da amostras e *K* centros $\mu_1, \mu_2, \ldots, \mu_k$:
+
+$$D(\mathbf x_i,\boldsymbol{\mu_1}, \ldots, \boldsymbol \mu_K) = \min_{1\leq i\leq K} ||\mathbf x_i - \boldsymbol \mu_j||, \, 1\leq i, \leq k$$ {#eq-kmeans}
+
+Os centros dos clusters, dessa forma, são obtidos conforme a @eq-kmeans2:
+
+$$(\boldsymbol{\hat \mu_1}, \ldots, \boldsymbol{\hat \mu_k}) = \arg\min\limits_{\boldsymbol{\hat \mu_1}, \ldots, \boldsymbol{\hat \mu_k}} \sum_{i=1}^n D^2(\mathbf x_i,\boldsymbol{\mu_1}, \ldots, \boldsymbol \mu_K)$$ {#eq-kmeans2}
+
+O problema com o método *K-means* é que, a exemplo do que ocorre com o método 
+dos mínimos quadrados ordinários, este método é muito sensível à presença de 
+*outliers*. A @fig-kmeans (A) mostra que o método é eficiente em estimar as 
+k-médias, porém, na presença de *outliers* (@fig-kmeans (B)), os resultados
+ficam comprometidos.
+
+![Problema com *K-means*: sensibilidade à *outliers*.](./img/03-est/K-means.png){#fig-kmeans}
+
+### *K-TAU*
+
+@Gonzalez2019 propuseram 
+
+### *K-medoids*
+
+*K-medoids* é um método robusto de *clusterização* que 
+

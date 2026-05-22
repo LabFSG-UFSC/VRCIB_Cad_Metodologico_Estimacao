@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -71,6 +91,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="cover-style.css">
@@ -225,8 +274,24 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Índice</h2>
+   
+  <ul>
+  <li><a href="#métodos-de-limpeza-de-dados" id="toc-métodos-de-limpeza-de-dados" class="nav-link active" data-scroll-target="#métodos-de-limpeza-de-dados"><span class="header-section-number">4.1</span> Métodos de limpeza de dados</a>
+  <ul>
+  <li><a href="#o-método-dos-mínimos-quadrados-aparados" id="toc-o-método-dos-mínimos-quadrados-aparados" class="nav-link" data-scroll-target="#o-método-dos-mínimos-quadrados-aparados"><span class="header-section-number">4.1.1</span> O método dos mínimos quadrados aparados</a></li>
+  <li><a href="#mm-estimadores" id="toc-mm-estimadores" class="nav-link" data-scroll-target="#mm-estimadores"><span class="header-section-number">4.1.2</span> MM-estimadores</a></li>
+  </ul></li>
+  <li><a href="#métodos-de-classificação" id="toc-métodos-de-classificação" class="nav-link" data-scroll-target="#métodos-de-classificação"><span class="header-section-number">4.2</span> Métodos de classificação</a>
+  <ul>
+  <li><a href="#k-means" id="toc-k-means" class="nav-link" data-scroll-target="#k-means"><span class="header-section-number">4.2.1</span> <em>K-means</em></a></li>
+  <li><a href="#k-tau" id="toc-k-tau" class="nav-link" data-scroll-target="#k-tau"><span class="header-section-number">4.2.2</span> <em>K-TAU</em></a></li>
+  <li><a href="#k-medoids" id="toc-k-medoids" class="nav-link" data-scroll-target="#k-medoids"><span class="header-section-number">4.2.3</span> <em>K-medoids</em></a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Caderno_Metodologico/edit/main/04_est.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -251,8 +316,128 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Na Etapa de Modelagem e Plantas de Valores Genéricos foram utilizados os métodos descritos nas seções x à y.</p>
+<section id="métodos-de-limpeza-de-dados" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="métodos-de-limpeza-de-dados"><span class="header-section-number">4.1</span> Métodos de limpeza de dados</h2>
+<p>A limpeza dos dados é feita com métodos robustos de estimação, dando-se preferência aos estimadores com maiores <em>breakdown-points</em>, como estimador de mínimos quadrados aparados e os MM-estimadores. A escolha do método dos mínimos quadrados ponderados foi feita com o intuito de evitar a remoção desnecessária de muitos pontos falsos <em>outliers</em> da amostra. Para entender, considere-se os gráficos das Figuras <a href="#fig-bagplot" class="quarto-xref"><span>4.1</span></a> e <a href="#fig-bagplot2" class="quarto-xref"><span>4.2</span></a> <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>Na <a href="#fig-bagplot" class="quarto-xref">Figura&nbsp;<span>4.1</span></a> podem ser vistos os diagramas de caixa de cada variável, às margens do gráfico principal, em que é possível notar uma assimetria na amostra: existe uma série de pontos à direita da distribuição de ambas as variáveis classificados como <em>outliers</em> pelo critério do <em>boxplot</em> (<span class="math inline">\(Q_3 + 1,5 \cdot \text{IQR}\)</span>). O gráfico <em>bagplot</em> da <a href="#fig-bagplot" class="quarto-xref">Figura&nbsp;<span>4.1</span></a>, no entanto, em que 50% dos dados se encontram dentro do primeiro <em>bag</em>, de cor mais escura, e cuja área que separa os <em>outliers</em> dos <em>inliers</em> é exibida em cor cinza-clara, mostra que apenas 4 pontos foram classificados como <em>outliers</em>. Note-se ainda que dois dos pontos classificados como <em>outliers</em> pelo critério do <em>bagplot</em> não foram identificado pelo critério do <em>boxplot</em>.</p>
+<p>Já na <a href="#fig-bagplot2" class="quarto-xref">Figura&nbsp;<span>4.2</span></a>, em que as variáveis explicativas apresentam distribuição mais simétrica, pois as variáveis encontram-se transformadas para a obtenção da normalidade, pode-se notar que o critério dos <em>boxplots</em> implicaria remover uma série de pontos em ambos os lados da distribuição das variáveis, enquanto o critério do <em>bagplot</em> mostra que, novamente, apenas alguns pontos precisam de fato ser removidos da amostra para uma boa modelagem.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-bagplot" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bagplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04_est_files/figure-html/fig-bagplot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bagplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.1: Bagplot. Preços Totais
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-bagplot2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bagplot2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04_est_files/figure-html/fig-bagplot2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bagplot2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.2: Bagplot. Preços Unitários.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="o-método-dos-mínimos-quadrados-aparados" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="o-método-dos-mínimos-quadrados-aparados"><span class="header-section-number">4.1.1</span> O método dos mínimos quadrados aparados</h3>
+<p>Os dados oriundos do observatório do mercado imobiliário são usualmente limpos com o auxílio de regressão robusta. Para melhor compreensão do método dos mínimos quadrados aparados, pode-se compará-lo com o método dos mínimos quadrados ordinários em que o quadrado dos resíduos, <span class="math inline">\(r_i\)</span>, são minimizados:</p>
+<p><span id="eq-OLS"><span class="math display">\[\hat\beta_{\text{OLS}} = \min S(\boldsymbol \beta) = \sum_{i=1}^n r_i^2(\boldsymbol \beta) \tag{4.1}\]</span></span></p>
+<p>Considerando que os resíduos são obtidos através de um modelo de regressão tal como o da <a href="#eq-regressao" class="quarto-xref">Equação&nbsp;<span>4.2</span></a>:</p>
+<p><span id="eq-regressao"><span class="math display">\[\mathbf y = \mathbf X \boldsymbol \beta + \mathbf u \tag{4.2}\]</span></span></p>
+<p>Então a <a href="#eq-OLS" class="quarto-xref">Equação&nbsp;<span>4.1</span></a> pode ser reescrita da seguinte maneira:</p>
+<p><span id="eq-OLS2"><span class="math display">\[\boldsymbol{\hat\beta_{\text{OLS}}} = \arg\min\limits_{\boldsymbol \beta} (\mathbf y - \mathbf X \boldsymbol \beta)^2 \tag{4.3}\]</span></span></p>
+<p>Já a regressão robusta pode ser ajustada de diversas maneiras, com a aplicação de uma função, <span class="math inline">\(\rho\)</span>, dos resíduos diferentes da função quadrática, como ilustrado na <a href="#eq-RLS" class="quarto-xref">Equação&nbsp;<span>4.4</span></a>. O mais natural seria utilizar o absoluto dos resíduos, em lugar do seu quadrado. Porém, a função absoluto, <span class="math inline">\(abs(t)\)</span>, não possui propriedades desejáveis (não é uma função derivável em <span class="math inline">\(t = 0\)</span>, o que dificulta o processo de minimização). Por isso é mais comum a utilização de uma função como o <em>M-Estimador</em> de Huber <span class="citation" data-cites="Huber1964">(<a href="references.html#ref-Huber1964" role="doc-biblioref">HUBER, 1964</a>)</span>, da <a href="#eq-HLoss" class="quarto-xref">Equação&nbsp;<span>4.5</span></a>.</p>
+<p><span id="eq-RLS"><span class="math display">\[\boldsymbol{\hat\beta_{\text{RLS}}} =  \arg\min\limits_{\boldsymbol \beta} \rho(\mathbf y - \mathbf X \boldsymbol \beta) \tag{4.4}\]</span></span></p>
+<p>Deve-se notar que a função de Huber equivale aproximadamente a um processo de <em>Winsorização</em> os resíduos, ou seja, a partir de um determinado valor de <span class="math inline">\(k\)</span> (em geral igual a 1,5) os resíduos são alterados de forma que para <span class="math inline">\(|r_i| &gt; k\)</span> a função de minimização equivale a tomar o valor absoluto dos resíduos e para resíduos em que <span class="math inline">\(r_i \leq k\)</span> são tomados os resíduos quadráticos.</p>
+<p><span id="eq-HLoss"><span class="math display">\[
+\rho_{Huber}(t) = \begin{cases}
+\frac{1}{2} t^2 &amp; |t| \leq k\\
+k|t| - \frac{1}{2} k^2&amp; |t| &gt;k
+\end{cases}
+\tag{4.5}\]</span></span></p>
+<p>Diversas outras funções foram propostas para a <a href="#eq-RLS" class="quarto-xref">Equação&nbsp;<span>4.4</span></a>, como a função <em>biweight</em> de Tukey. No entanto, este método de estimação padece do problema de não ser robusto a <em>outliers</em> nas variáveis explicativas, porém apenas a <em>outliers</em> presentes na variável dependente (no caso, imóveis de valores muito mais altos ou mais baixos do que os que seria previstos pelos modelos).</p>
+<p>Para dar conta dos <em>outliers</em> presentes nas variáveis explicativas, <span class="citation" data-cites="Rousseeuw_least_1984">ROUSSEEUW (<a href="references.html#ref-Rousseeuw_least_1984" role="doc-biblioref">1984</a>)</span> propôs dois estimadores: o estimador <strong>LMS</strong> (<em>Least Median of Squares</em>), que minimiza <strong>a mediana</strong> dos resíduos quadráticos, e o estimador LTS (<em>Least Trimmed Squares</em>, ou Mínimos Quadrados Aparados), que minimiza o quadrado dos resíduos, porém apenas para os “bons” pontos da amostra:</p>
+<p><span id="eq-LTS"><span class="math display">\[
+\beta_{LTS} = \underset{\boldsymbol \beta}{\arg \min} \sum_{i=1}^h (\mathbf y - \mathbf X\boldsymbol \beta)^2_{i:n}
+\tag{4.6}\]</span></span></p>
+<p>Resumidamente, o estimador LTS da <a href="#eq-LTS" class="quarto-xref">Equação&nbsp;<span>4.6</span></a> utiliza aproximadamente apenas <span class="math inline">\(h\)</span> pontos da amostra (em geral, <span class="math inline">\(h \approx 0,5\cdot n\)</span>) para um ajuste mais estável, e calcula os resíduos de cada ponto da amostra em relação à esta reta de regressão robusta. Após o cálculo dos resíduos os pontos são classificados como “bons” (pontos cujos resíduos padronizados são menores que 2,5 em módulo) ou “ruins” (em que <span class="math inline">\(|r_i| &gt; 2,5\)</span>). Por questões computacionais, a princípio o estimador LMS foi adotado em detrimento do estimador LTS. No entanto, com o desenvolvimento da capacidade de processamento dos computadores, o método LTS tornou-se mais popular e, por isso, foi o escolhido para a limpeza de dados neste projeto.</p>
+</section>
+<section id="mm-estimadores" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="mm-estimadores"><span class="header-section-number">4.1.2</span> MM-estimadores</h3>
+<p>Os MM-estimadores foram primeiramente apresentados por <span class="citation" data-cites="Yohai1987">YOHAI (<a href="references.html#ref-Yohai1987" role="doc-biblioref">1987</a>)</span>.</p>
+<p>Assim como o estimador de mínimos quadrados aparados, os MM-estimadores podem apresentar o valor máximo para o <em>breakdown-point</em> (0,5), na condição em que os resíduos tenham distribuição normal <span class="citation" data-cites="Yohai1987">(<a href="references.html#ref-Yohai1987" role="doc-biblioref">YOHAI, 1987</a>)</span>.</p>
+<p>Segundo <span class="citation" data-cites="Yohai1987">YOHAI (<a href="references.html#ref-Yohai1987" role="doc-biblioref">1987</a>)</span>, os MM-estimadores são obtidos em três estágios. No primeiro, um modelo de regressão robusta com alto <em>breakdown-point</em>, como o dos mínimos quadrados aparados, é estimado. Com o modelo obtido no primeiro estágio, então, são computados os resíduos e, com estes, por sua vez, um estimador robusto de escala dos resíduos é obtido.</p>
+</section>
+</section>
+<section id="métodos-de-classificação" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="métodos-de-classificação"><span class="header-section-number">4.2</span> Métodos de classificação</h2>
+<p>Para este projeto foram utilizados métodos de classificação ou <em>clusterização</em> robustos. Assim como no caso da regressão robusta, é mais fácil compreender os métodos de classificação robusta quando comparámo-los aos métodos clássicos de classificação, como o método <em>K-means</em>.</p>
+<section id="k-means" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="k-means"><span class="header-section-number">4.2.1</span> <em>K-means</em></h3>
+<p>O método <em>K-means</em> consiste na minimização da distância quadrática entre os pontos da amostras e <em>K</em> centros <span class="math inline">\(\mu_1, \mu_2, \ldots, \mu_k\)</span>:</p>
+<p><span id="eq-kmeans"><span class="math display">\[D(\mathbf x_i,\boldsymbol{\mu_1}, \ldots, \boldsymbol \mu_K) = \min_{1\leq i\leq K} ||\mathbf x_i - \boldsymbol \mu_j||, \, 1\leq i, \leq k \tag{4.7}\]</span></span></p>
+<p>Os centros dos clusters, dessa forma, são obtidos conforme a <a href="#eq-kmeans2" class="quarto-xref">Equação&nbsp;<span>4.8</span></a>:</p>
+<p><span id="eq-kmeans2"><span class="math display">\[(\boldsymbol{\hat \mu_1}, \ldots, \boldsymbol{\hat \mu_k}) = \arg\min\limits_{\boldsymbol{\hat \mu_1}, \ldots, \boldsymbol{\hat \mu_k}} \sum_{i=1}^n D^2(\mathbf x_i,\boldsymbol{\mu_1}, \ldots, \boldsymbol \mu_K) \tag{4.8}\]</span></span></p>
+<p>O problema com o método <em>K-means</em> é que, a exemplo do que ocorre com o método dos mínimos quadrados ordinários, este método é muito sensível à presença de <em>outliers</em>. A <a href="#fig-kmeans" class="quarto-xref">Figura&nbsp;<span>4.3</span></a> (A) mostra que o método é eficiente em estimar as k-médias, porém, na presença de <em>outliers</em> (<a href="#fig-kmeans" class="quarto-xref">Figura&nbsp;<span>4.3</span></a> (B)), os resultados ficam comprometidos.</p>
+<div id="fig-kmeans" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-kmeans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./img/03-est/K-means.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-kmeans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.3: Problema com <em>K-means</em>: sensibilidade à <em>outliers</em>.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="k-tau" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="k-tau"><span class="header-section-number">4.2.2</span> <em>K-TAU</em></h3>
+<p><span class="citation" data-cites="Gonzalez2019">GONZALEZ et al. (<a href="references.html#ref-Gonzalez2019" role="doc-biblioref">2019</a>)</span> propuseram</p>
+</section>
+<section id="k-medoids" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="k-medoids"><span class="header-section-number">4.2.3</span> <em>K-medoids</em></h3>
+<p><em>K-medoids</em> é um método robusto de <em>clusterização</em> que</p>
 
 
+<div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Gonzalez2019" class="csl-entry" role="listitem">
+GONZALEZ, J. D.; YOHAI, V. J.; ZAMAR, R. H. Robust Clustering Using Tau-Scales., 2019. Disponível em: &lt;<a href="https://arxiv.org/abs/1906.08198">https://arxiv.org/abs/1906.08198</a>&gt;.
+</div>
+<div id="ref-Huber1964" class="csl-entry" role="listitem">
+HUBER, P. J. Robust <span>Estimation</span> of a <span>Location Parameter</span>. <strong>The Annals of Mathematical Statistics</strong>, v. 35, n. 1, p. 73–101, 1964. Disponível em: &lt;<a href="https://doi.org/10.1214/aoms/1177703732">https://doi.org/10.1214/aoms/1177703732</a>&gt;.
+</div>
+<div id="ref-Rousseeuw_least_1984" class="csl-entry" role="listitem">
+ROUSSEEUW, P. J. Least <span>Median</span> of <span>Squares</span> <span>Regression</span>. <strong>Journal of the American Statistical Association</strong>, v. 79, n. 388, p. 871–880, 1984. [American Statistical Association, Taylor &amp; Francis, Ltd.]. Disponível em: &lt;<a href="http://www.jstor.org/stable/2288718">http://www.jstor.org/stable/2288718</a>&gt;. Acesso em: 5/3/2026.
+</div>
+<div id="ref-Bagplot1999" class="csl-entry" role="listitem">
+ROUSSEEUW, P. J.; RUTS, I.; TUKEY, J. W. The <span>Bagplot</span>: <span>A Bivariate Boxplot</span>. <strong>The American Statistician</strong>, v. 53, n. 4, p. 382–387, 1999. Taylor &amp; Francis. Disponível em: &lt;<a href="https://doi.org/10.1080/00031305.1999.10474494">https://doi.org/10.1080/00031305.1999.10474494</a>&gt;.
+</div>
+<div id="ref-Tukey1975" class="csl-entry" role="listitem">
+TUKEY, J. W. Mathematics and the Picturing of Data., 1975. Disponível em: &lt;<a href="https://api.semanticscholar.org/CorpusID:233506359">https://api.semanticscholar.org/CorpusID:233506359</a>&gt;.
+</div>
+<div id="ref-Yohai1987" class="csl-entry" role="listitem">
+YOHAI, V. J. High <span>Breakdown-Point</span> and <span>High Efficiency Robust Estimates</span> for <span>Regression</span>. <strong>The Annals of Statistics</strong>, v. 15, n. 2, p. 642–656, 1987. Institute of Mathematical Statistics. Disponível em: &lt;<a href="https://www.jstor.org/stable/2241331">https://www.jstor.org/stable/2241331</a>&gt;. Acesso em: 18/5/2026.
+</div>
+</div>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>O <em>bagplot</em> é uma generalização do <em>boxplot</em> para duas dimensões, proposto por <span class="citation" data-cites="Bagplot1999">ROUSSEEUW et al. (<a href="references.html#ref-Bagplot1999" role="doc-biblioref">1999</a>)</span>, baseado nos conceitos de Profundidade de Tukey, ou Profundidade do meio-espaço e na mediana profunda, ou mediana bivariada <span class="citation" data-cites="Tukey1975">(<a href="references.html#ref-Tukey1975" role="doc-biblioref">TUKEY, 1975</a>)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -675,7 +860,7 @@ ul.task-list li input[type="checkbox"] {
 </div>   
     <div class="nav-footer-center">
 <p><img src="img/Logo com RFB e UFSC.png" class="img-fluid" width="250"></p>
-<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Caderno_Metodologico/edit/main/04_est.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Caderno_Metodologico/edit/main/04_est.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

@@ -3,7 +3,12 @@ project:
   output-dir: docs
 
 lang: pt-br
-  
+
+execute:
+  echo: false
+  message: false
+  warning: false
+
 toc: true
 toc-depth: 4  
   
