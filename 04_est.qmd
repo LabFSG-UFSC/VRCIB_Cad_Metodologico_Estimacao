@@ -107,6 +107,28 @@ um modelo de regressão robusta a aproximadamente 50% dos pontos mais
 que apresentam resíduos padronizados maiores, em módulo, a 2,5, calculados em
 relação ao modelo ajustado com esses dados mais "importantes".
 
+### *Breakdown point*
+
+Segundo @Davies2007, uma das melhores medidas de robustez é o *breakdown point*
+($\boldsymbol \epsilon^*$), de @Hampel1971:
+
+> The breakdown point is one of the most popular measures of robustness of
+a statistical procedure. Originally introduced for location functionals (Hampel,
+1968, 1971) the concept has been generalized to scale, regression and — with
+more or less success — to other situations.
+
+Grosso modo, o *breakdown point* de um estimador é o menor percentual de
+dados contaminantes que levam o estimador a assumir arbitrariamente grandes
+valores, ou valores aberrantes. Para compreender, tome-se o caso da estimação
+da tendência central, $\mu$, de um conjunto de dados com distribuição 
+supostamente normal. A média aritmética, $\bar x$, neste caso, é um estimador
+com $\boldsymbol \epsilon^* = 0$, pois basta um dado amostral contaminante para
+produzir estimativas totalmente equivocadas para o parâmetro. No outro extremo
+encontra-se a mediana amostral, $\tilde x$, apresenta 
+$\boldsymbol \epsilon^* = 0,5$, ou seja, a mediana é um estimador robusto para o
+parâmetro central da distribuição, desde que menos de 50% dos dados amostrais
+sejam contaminantes.
+
 ### O método dos mínimos quadrados aparados
 
 Para melhor compreensão do método dos mínimos quadrados aparados, deve-se 
@@ -132,11 +154,11 @@ robustos se deu com o surgimento dos M-Estimadores, baseados na idéia da
 aplicação de uma função, $\rho$, dos resíduos, diferente da função quadrática, 
 como ilustrado na @eq-RLS. 
 
-$$\boldsymbol{\hat\beta_{\text{RLS}}} =  \arg \underset{\beta} \min\sum_{i=1}^n \rho(r_i^2(\boldsymbol \beta))$$ {#eq-RLS}
+$$\boldsymbol{\hat\beta_{\text{RLS}}} =  \arg \underset{\beta} \min\sum_{i=1}^n \rho(r_i)$$ {#eq-RLS}
 
-É fácil perceber que a intenção com os M-Estimadores foi contornar o fato que a 
-função absoluto, $|r(t)|$, não possui propriedades desejáveis (não é uma função 
-derivável em $t = 0$, o que dificulta o processo de minimização). Assim, 
+É fácil perceber que a intenção com os *M-Estimadores* foi contornar o fato que 
+a função absoluto, $|r(t)|$, não possui propriedades desejáveis (não é uma 
+função derivável em $t = 0$, o que dificulta o processo de minimização). Assim, 
 @Huber1964 propôs inicialmente a aplicação da função da @eq-HLoss, que consiste
 em utilizar, para os menores resíduos, em módulo ( $|r_i| \leq k$), a função 
 quadrática e, somente a partir de um valor $k$ (ou seja, para $|r_i| > k$), a 
@@ -155,7 +177,8 @@ da @eq-LAD, quanto nos *M-Estimadores*, persite à sensibilidade à presença de
 *outliers* nas variáveis explicativas, *i.e.*, os *M-Estimadores* são eficazes
 apenas em lidar com a presença de *outliers* na variável dependente (no caso, 
 imóveis de valores observados muito mais altos ou mais baixos do que os que 
-seria previstos pelo mercado).
+seria previstos pelo mercado). Desta forma, tanto o estimador MQO da @eq-OLS
+como os *M-Estimadores* possuem *breakdown point* $\boldsymbol \epsilon^* = 0$.
 
 Então @Rousseeuw1984, para contornar o problema dos *outliers* presentes nas 
 variáveis explicativas, propôs dois estimadores robustos alternativos aos 
@@ -182,10 +205,11 @@ são classificados como "bons" (pontos cujos resíduos padronizados são menores
 que 2,5, em módulo) ou "ruins" (pontos cujos resíduos padronizados são maiores
 ou iguais a 2,5). 
 
-O estimador LTS é famoso por apresentar *breakdown point* igual a 50% (máximo)[^3],
-isto é, contanto que menos de metade dos pontos do conjunto de dados em análise 
-consista de *outliers*, o algoritmo é eficaz em identificar esses pontos 
-anômalos e ajustar um modelo que reflete o padrão verdadeiro dos dados.
+O estimador LTS é famoso por apresentar *breakdown point* igual a 50%
+(máximo)[^3], isto é, contanto que menos de metade dos pontos do conjunto de
+dados em análise consista de *outliers*, o algoritmo é eficaz em identificar
+esses pontos anômalos e ajustar um modelo que reflete o padrão verdadeiro dos
+dados.
 
 [^3]: Quando são utilizados para o ajuste do modelo apenas aproximadamente 50%
 dos dados, *i.e.*, quando $h = (n/2) + 1$.
