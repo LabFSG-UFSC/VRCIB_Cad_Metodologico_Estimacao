@@ -1,0 +1,5 @@
+# Metodologia Geral
+
+Para o projeto do Valor de Referência (VR) do Cadastro Imobiliário Brasileiro 
+(CIB) foi adotado o método evolutivo, da @eq-ME:
+

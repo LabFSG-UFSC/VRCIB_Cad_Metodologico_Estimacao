@@ -1,7 +1,8 @@
-# Modelagem e Plantas de Valores Genéricos
+# Limpeza dos dados
 
-Na Etapa de Modelagem e Plantas de Valores Genéricos foram utilizados os métodos 
-descritos nas seções a seguir.
+A Etapa de Modelagem e Avaliações em Massa é iniciada com a limpeza dos dados
+oriundos do Observatório do Mercado Imobiliário. Neste capítulo saõ apresentados
+os métodos utilizados.
 
 ## Métodos de limpeza de dados
 
@@ -97,7 +98,7 @@ fit <- lm(log(PU) ~ log(lotsize), data = hprice1, subset = -c(47, 77))
 fit1 <- update(fit0, weights = LTS$lts.wt)
 ```
 
-Os conceitos de profundidade estatística e mediana profunda podem ser extendidos
+Os conceitos de profundidade estatística e mediana profunda podem ser estendidos
 para outras dimensões. O algoritmo para o cômputo eficiente destas estatísticas
 pode ser visto em @Struyf2000.
 
@@ -110,7 +111,8 @@ relação ao modelo ajustado com esses dados mais "importantes".
 ### *Breakdown point*
 
 Segundo @Davies2007, uma das melhores medidas de robustez é o *breakdown point*
-($\boldsymbol \epsilon^*$), de @Hampel1971:
+($\boldsymbol \epsilon^*$), conceito desenvolvido por @Hodges1967 e extendido 
+por @Hampel1971 e @Donoho1983:
 
 > The breakdown point is one of the most popular measures of robustness of
 a statistical procedure. Originally introduced for location functionals (Hampel,
@@ -129,28 +131,61 @@ $\boldsymbol \epsilon^* = 0,5$, ou seja, a mediana é um estimador robusto para 
 parâmetro central da distribuição, desde que menos de 50% dos dados amostrais
 sejam contaminantes.
 
-### O método dos mínimos quadrados aparados
+### Mínimos Quadrados Ordinários
 
 Para melhor compreensão do método dos mínimos quadrados aparados, deve-se 
-compará-lo com o método dos mínimos quadrados ordinários, em que a soma do 
-quadrado dos resíduos, $r_i$, é minimizada:
+contextualizá-lo com o método clássico dos mínimos quadrados ordinários.
 
-$$\hat\beta_{\text{OLS}} = \min S(\boldsymbol \beta) = \arg \underset{\beta} \min\sum_{i=1}^n r_i^2(\boldsymbol \beta)$$ {#eq-OLS}
+Seja então o modelo usual de regressão da @eq-LM, em que $\mathbf y$ é um vetor que 
+contém uma **variável dependente** a ser explicada; $\mathbf X$ uma matriz que 
+contém em suas colunas uma ou mais **variáveis explicativas**; e 
+$\boldsymbol \beta$ é um vetor de coeficientes a ser estimado.
 
-Ou simplesmente, para facilitar a notação:
+$$
+\mathbf y = \mathbf X\boldsymbol \beta + \mathbf r
+$$ {#eq-LM}
 
-$$\hat\beta_{\text{OLS}} = \arg \underset{\beta} \min \sum_{i=1}^n r_i^2$$ {#eq-OLS}
+Então o método dos mínimos quadrados ordinários consiste na minimização de uma 
+função  objetivo, $S$, nesta caso a função soma do quadrado dos resíduos, 
+$S(\boldsymbol\beta) = \sum r_i^2(\boldsymbol\beta)$. Ou seja, no método dos
+mínimos quadrados ordinários busca-se minimizar:
+
+$$
+\hat\beta_{\text{OLS}} = \min S(\boldsymbol \beta) = \arg \underset{\beta} \min\sum_{i=1}^n r_i^2(\boldsymbol \beta)
+$$ {#eq-OLS}
+
+Em que $\mathbf r$ é um vetor dos resíduos do modelo da @eq-LM, ou seja:
+
+$$
+\mathbf r = \mathbf y - \mathbf X \boldsymbol \beta
+$$ {#eq-residuos}
+
+Assim, a @eq-OLS poderia ser escrita, se uma maneira mais formal, em notação
+matricial, como abaixo:
+
+$$
+= \arg \underset{\beta} \min\sum_{i=1}^n (\mathbf y - X\boldsymbol \beta)^2
+$$ {#eq-OLS2}
+
+Deste ponto em diante, contudo, para fins de simplificação do entendimento, 
+adota-se a seguinte notação, reescrevento a @eq-OLS:
+
+$$
+\hat\beta_{\text{OLS}} = \arg \underset{\beta} \min \sum_{i=1}^n r_i^2
+$$ {#eq-OLS3}
+
+### *M-Estimadores*
 
 Os métodos robustos consistem em variações em torno do processo de minimização
 dos resíduos. Enquanto no método clássico dos mínimos quadrados ordinários é 
 minimizada a soma do quadrado dos resíduos, no método dos mínimos resíduos
 absolutos, proposto por @Edgeworth1887, baseado no método gráfico de 
-Boscovich:
+Boscovich, tem-se:
 
 $$\hat\beta_{\text{LAD}} = \arg \underset{\beta} \min \sum_{i=1}^n |r_i|$$ {#eq-LAD}
 
 Segundo @Rousseeuw1984, o próximo passo no progresso dos métodos de regressão
-robustos se deu com o surgimento dos M-Estimadores, baseados na idéia da 
+robustos se deu com o surgimento dos *M-Estimadores*, baseados na idéia da 
 aplicação de uma função, $\rho$, dos resíduos, diferente da função quadrática, 
 como ilustrado na @eq-RLS. 
 
@@ -179,6 +214,8 @@ apenas em lidar com a presença de *outliers* na variável dependente (no caso,
 imóveis de valores observados muito mais altos ou mais baixos do que os que 
 seria previstos pelo mercado). Desta forma, tanto o estimador MQO da @eq-OLS
 como os *M-Estimadores* possuem *breakdown point* $\boldsymbol \epsilon^* = 0$.
+
+### Mínimos Quadrados Aparados
 
 Então @Rousseeuw1984, para contornar o problema dos *outliers* presentes nas 
 variáveis explicativas, propôs dois estimadores robustos alternativos aos 
@@ -247,8 +284,8 @@ ellipse_data <-  hprice1 |>
 #| label: fig-LTSvsLS
 #| fig-cap: ""
 ggplot(hprice1, aes(x = log(lotsize), y = log(PU))) +
-  geom_point() +
-#  geom_point(aes(colour = factor(w))) +
+#  geom_point() +
+  geom_point(aes(colour = factor(w))) +
   geom_smooth(method = "lm", se = FALSE, lty = 2, aes(col = "LS")) +
   # geom_smooth(method = "rlm", method.args = list(method = "MM"),
   #              aes(col = "MM")) +
@@ -291,51 +328,21 @@ ggplot(hprice1, aes(x = log(lotsize), y = log(PU))) +
 ```
 
 
-### MM-estimadores
+### *MM-estimadores*
 
-Os MM-estimadores foram primeiramente apresentados por @Yohai1987.
+Os *MM-estimadores* foram primeiramente propostos por @Yohai1987.
 
-Assim como o estimador de mínimos quadrados aparados, os MM-estimadores podem
+Assim como o estimador de mínimos quadrados aparados, os *MM-estimadores* podem
 apresentar o valor máximo para o *breakdown-point* (0,5), na condição em que
 os resíduos tenham distribuição normal [@Yohai1987].
 
-Segundo @Yohai1987, os MM-estimadores são obtidos em três estágios. No primeiro,
-um modelo de regressão robusta com alto *breakdown-point*, como o dos mínimos
-quadrados aparados, é estimado. Com o modelo obtido no primeiro estágio, então,
-são computados os resíduos e, com estes, por sua vez, um estimador robusto de
-escala dos resíduos é obtido.
+Segundo @Yohai1987, os *MM-estimadores* são obtidos em três estágios. No 
+primeiro, um modelo de regressão robusta com alto *breakdown-point*, como o dos 
+mínimos quadrados aparados, é estimado. Com o modelo obtido no primeiro estágio,
+então, são computados os resíduos e, com estes, por sua vez, um estimador 
+robusto de escala dos resíduos é obtido.
 
-## Métodos de classificação
-
-Para este projeto foram utilizados métodos de classificação ou *clusterização* 
-robustos. Assim como no caso da regressão robusta, é mais fácil compreender os 
-métodos de classificação robusta quando comparámo-los aos métodos clássicos de 
-classificação, como o método *K-means*.
-
-### *K-means*
-
-O método *K-means* consiste na minimização da distância quadrática entre os
-pontos da amostras e *K* centros $\mu_1, \mu_2, \ldots, \mu_k$:
-
-$$D(\mathbf x_i,\boldsymbol{\mu_1}, \ldots, \boldsymbol \mu_K) = \min_{1\leq i\leq K} ||\mathbf x_i - \boldsymbol \mu_j||, \, 1\leq i, \leq k$$ {#eq-kmeans}
-
-Os centros dos clusters, dessa forma, são obtidos conforme a @eq-kmeans2:
-
-$$(\boldsymbol{\hat \mu_1}, \ldots, \boldsymbol{\hat \mu_k}) = \arg\min\limits_{\boldsymbol{\hat \mu_1}, \ldots, \boldsymbol{\hat \mu_k}} \sum_{i=1}^n D^2(\mathbf x_i,\boldsymbol{\mu_1}, \ldots, \boldsymbol \mu_K)$$ {#eq-kmeans2}
-
-O problema com o método *K-means* é que, a exemplo do que ocorre com o método 
-dos mínimos quadrados ordinários, este método é muito sensível à presença de 
-*outliers*. A @fig-kmeans (A) mostra que o método é eficiente em estimar as 
-k-médias, porém, na presença de *outliers* (@fig-kmeans (B)), os resultados
-ficam comprometidos.
-
-![Problema com *K-means*: sensibilidade à *outliers*.](./img/03-est/K-means.png){#fig-kmeans}
-
-### *K-TAU*
-
-@Gonzalez2019 propuseram 
-
-### *K-medoids*
-
-*K-medoids* é um método robusto de *clusterização* que 
+Neste projeto, o objetivo com a utilização dos métodos robustos é a mera 
+limpeza dos dados, o que possibilita a utilização de outros métodos a posteriori
+com mais segurança. Portanto, não foi adotada a utilização dos *MM-Estimadores**.
 

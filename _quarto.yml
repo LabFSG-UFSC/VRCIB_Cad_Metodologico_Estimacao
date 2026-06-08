@@ -14,21 +14,21 @@ toc-depth: 4
   
 book:
   title: "Caderno Metodológico"
+  subtitle: "Etapa de Modelagem e Avaliação em Massa"
   author: "Equipe UFSC"
   date: today
   date-format: "MMMM, YYYY"
   chapters:
     - index.qmd
     - 01_intro.qmd
-    - 02_omi.qmd
-    - 03_carto.qmd
-    - 04_est.qmd
-    - 05_conclusao.qmd
+    - 02_basico.qmd
+    - 03_limpeza.qmd
+    - 04_classificacao.qmd
+    - 05_ImoveisEdificados.qmd
+    - 99_conclusao.qmd
     - references.qmd
   appendices:
-    - 99_apendice1.qmd
-    - 98_apendice2.qmd
-    - 97_apendice3.qmd
+    - 98_apendice1.qmd
   page-footer: 
     left: "© 2026 UFSC"
     center: "![](img/Logo com RFB e UFSC.png){width=250px}"
