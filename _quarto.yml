@@ -28,6 +28,7 @@ book:
     - 06_ML.qmd
     - 07_lotes.qmd
     - 08_equacoes.qmd
+    - 09_municipios.qmd
     - 99_conclusao.qmd
     - references.qmd
   appendices:
