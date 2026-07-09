@@ -313,7 +313,15 @@ window.Quarto = {
   <li><a href="#modelo-linear" id="toc-modelo-linear" class="nav-link" data-scroll-target="#modelo-linear"><span class="header-section-number">5.2.1</span> Modelo Linear</a></li>
   <li><a href="#geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" id="toc-geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" class="nav-link" data-scroll-target="#geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído"><span class="header-section-number">5.2.2</span> Geração da superfície de valores unitários de metro quadrado construído</a></li>
   </ul></li>
-  <li><a href="#capital-sociespacial" id="toc-capital-sociespacial" class="nav-link" data-scroll-target="#capital-sociespacial"><span class="header-section-number">5.3</span> Capital Sociespacial</a></li>
+  <li><a href="#capital-sociespacial" id="toc-capital-sociespacial" class="nav-link" data-scroll-target="#capital-sociespacial"><span class="header-section-number">5.3</span> Capital Sociespacial</a>
+  <ul>
+  <li><a href="#clusters-de-localização" id="toc-clusters-de-localização" class="nav-link" data-scroll-target="#clusters-de-localização"><span class="header-section-number">5.3.1</span> Clusters de localização</a></li>
+  <li><a href="#variáveis-de-localização-acessibilidade-e-centralidade" id="toc-variáveis-de-localização-acessibilidade-e-centralidade" class="nav-link" data-scroll-target="#variáveis-de-localização-acessibilidade-e-centralidade"><span class="header-section-number">5.3.2</span> Variáveis de localização – Acessibilidade e Centralidade</a>
+  <ul class="collapse">
+  <li><a href="#acessibilidade-ace" id="toc-acessibilidade-ace" class="nav-link" data-scroll-target="#acessibilidade-ace"><span class="header-section-number">5.3.2.1</span> Acessibilidade (Ace)</a></li>
+  <li><a href="#centralidade-cen" id="toc-centralidade-cen" class="nav-link" data-scroll-target="#centralidade-cen"><span class="header-section-number">5.3.2.2</span> Centralidade (Cen)</a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/05_variaveis.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></nav>
     </div>
@@ -811,14 +819,235 @@ Nota&nbsp;5.2: Derivação Racional de Fatores
 </section>
 <section id="capital-sociespacial" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="capital-sociespacial"><span class="header-section-number">5.3</span> Capital Sociespacial</h2>
-<p>(RAMON)</p>
+<section id="clusters-de-localização" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="clusters-de-localização"><span class="header-section-number">5.3.1</span> Clusters de localização</h3>
+<p>Tendo em vista a heterogeneidade espacial dos dados, em adição aos níveis espaciais “Distritos”” e “Setores censitários”“, foram gerados <em>clusters</em> espaciais para cada tipo de imóvel e para cada município com base no método de agrupamento não supervisionado <em>k-means</em>. As variáveis de entrada para a clusterização foram as coordenadas geográficas (<em>lat</em>, <em>lon</em>) padronizadas.</p>
+<p>Para tanto, as tipologias imobiliárias foram reclassificadas a partir das tipologias presentes na base de dados, de acordo com a <a href="#tbl-reclass" class="quarto-xref">Tabela&nbsp;<span>5.1</span></a>.</p>
+<div id="tbl-reclass" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-reclass-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.1: Reclassificação das tipologias imobiliárias para geração dos clusters espaciais. Elaboração própria.
+</figcaption>
+<div aria-describedby="tbl-reclass-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Classificação da base de dados</th>
+<th style="text-align: left;">Reclassificação</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Apartamento</td>
+<td style="text-align: left;">Apartamento</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cobertura</td>
+<td style="text-align: left;">Apartamento</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Flat</td>
+<td style="text-align: left;">Apartamento</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Casa</td>
+<td style="text-align: left;">Casa</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Casa de Condomínio</td>
+<td style="text-align: left;">Casa</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Casa de vila</td>
+<td style="text-align: left;">Casa</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sobrado</td>
+<td style="text-align: left;">Casa</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lote/Terreno</td>
+<td style="text-align: left;">Lote</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>O número de <em>clusters</em> (k) por cidade foi controlado, de modo a ser um número inteiro no intervalo <span class="math inline">\(3 \leq n \leq 30\)</span>, na dependência do número de observações por município (n). Nesse sentido, <em>k</em> foi calculado conforme <a href="#eq-kclusters" class="quarto-xref">Equação&nbsp;<span>5.7</span></a>:</p>
+<p><span id="eq-kclusters"><span class="math display">\[
+k - 3 + 3 \cdot \log_{10}{n}
+\tag{5.7}\]</span></span></p>
+<p>Sendo:</p>
+<p><span id="eq-kmax"><span class="math display">\[
+k = \max(k,3)
+\tag{5.8}\]</span></span></p>
+<p>e</p>
+<p><span id="eq-kmin"><span class="math display">\[
+k = \min(k,30)
+\tag{5.9}\]</span></span></p>
+<p>A <a href="#tbl-clusters" class="quarto-xref">Tabela&nbsp;<span>5.2</span></a> identifica o número de clusters gerado por tipologia e município.</p>
+<div id="tbl-clusters" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-clusters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.2: Número de clusters gerado por tipologia e município. Elaboração própria.
+</figcaption>
+<div aria-describedby="tbl-clusters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Lote</th>
+<th style="text-align: left;">Município</th>
+<th style="text-align: right;">k Apartamento</th>
+<th style="text-align: right;">k Casa</th>
+<th style="text-align: right;">k Lote</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Porto Velho</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"></td>
+<td style="text-align: left;">Fortaleza</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"></td>
+<td style="text-align: left;">Belo Horizonte</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"></td>
+<td style="text-align: left;">Campo Grande</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">Manaus</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"></td>
+<td style="text-align: left;">Salvador</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"></td>
+<td style="text-align: left;">Rio de Janeiro</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"></td>
+<td style="text-align: left;">Curitiba</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"></td>
+<td style="text-align: left;">Cuiabá.</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">11</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="variáveis-de-localização-acessibilidade-e-centralidade" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="variáveis-de-localização-acessibilidade-e-centralidade"><span class="header-section-number">5.3.2</span> Variáveis de localização – Acessibilidade e Centralidade</h3>
+<p>Em complemento às variáveis de localização procedentes do grupo de trabalho “Cartografia e variáveis”, foram geradas as variáveis de localização <em>Acessibilidade</em> e <em>Centralidade</em>. Estas são fundadas na abordagem da configuração espacial urbana, a qual se baseia em análises de redes. Nessa perspectiva, a representação fundamental de um sistema espacial é um grafo que inclui as unidades de espaço público (trechos de vias) e suas conexões com espaços adjacentes (trechos vizinhos) <span class="citation" data-cites="Krafta_Rauber_2020">(<a href="references.html#ref-Krafta_Rauber_2020" role="doc-biblioref">KRAFTA; RAUBER, 2020</a>)</span>. A exploração das propriedades das redes espaciais urbanas levou ao desenvolvimento de uma série de medidas configuracionais, dentre as quais as duas adotadas neste trabalho.</p>
+<p>A configuração espacial se relaciona diretamente com o valor imobiliário, uma vez que a geração de espaços mais ou menos acessíveis ou centrais está ligada à facilitação ou obstrução de interações entre indivíduos e a seu acesso aos benefícios e oportunidades urbanas <span class="citation" data-cites="Batty">BATTY (<a href="references.html#ref-Batty" role="doc-biblioref">2013</a>)</span>.</p>
+<section id="acessibilidade-ace" class="level4" data-number="5.3.2.1">
+<h4 data-number="5.3.2.1" class="anchored" data-anchor-id="acessibilidade-ace"><span class="header-section-number">5.3.2.1</span> Acessibilidade (Ace)</h4>
+<p>A acessibilidade refere-se à proximidade ou facilidade de acesso de uma localização em relação ao conjunto de localizações urbanas <span class="citation" data-cites="Hansen1959">HANSEN (<a href="references.html#ref-Hansen1959" role="doc-biblioref">1959</a>)</span>, refletindo a vantagem locacional do espaço. Por essa razão, localizações mais acessíveis tendem a traduzir-se em valores imobiliários superiores <span class="citation" data-cites="CHEN2023 Morales2020">(<a href="references.html#ref-Morales2020" role="doc-biblioref">MORALES et al., 2020</a>; <a href="references.html#ref-CHEN2023" role="doc-biblioref">CHEN et al., 2023</a>)</span>. A medida é calculada mensurando-se o quão próximo um trecho viário está de todos os outros trechos do sistema, conforme <a href="#eq-Ace" class="quarto-xref">Equação&nbsp;<span>5.10</span></a>:</p>
+<p><span id="eq-Ace"><span class="math display">\[
+\text{Ace}_i = \sum_{i\neq j,\, j:d_{ij\leq 7000}} \frac{W_j}{d_{ij}}
+\tag{5.10}\]</span></span></p>
+<p>Em que, <em>Wj</em> é a carga do trecho de destino do movimento, e <em>dij</em> é a extensão do caminho mínimo (menor distância) pela rede entre o trecho de origem, <em>i</em>, e o trecho de destino <em>j</em>, tendo em vista o raio limite de busca de 7000 metros. Tanto para a acessibilidade como para a centralidade a carga é a população residente no trecho, presumindo-se que localizações são mais acessíveis não apenas pela configuração geométrica da rede, mas também na proporção em que são potenciais focos de origem ou destino de indivíduos.</p>
+</section>
+<section id="centralidade-cen" class="level4" data-number="5.3.2.2">
+<h4 data-number="5.3.2.2" class="anchored" data-anchor-id="centralidade-cen"><span class="header-section-number">5.3.2.2</span> Centralidade (Cen)</h4>
+<p>A centralidade mensura a capacidade de intermediação, verificando a recorrência com que um trecho viário pertence ao caminho mínimo entre todos os pares de pontos componentes da rede. Desse modo, a centralidade relaciona-se diretamente à probabilidade de que o trecho seja escolhido em deslocamentos urbanos e, por extensão, ao movimento. Assim, por um lado, valores altos de centralidade se associam a valores do solo ou imobiliários superiores <span class="citation" data-cites="Morales2020 RAHMAN2021">(<a href="references.html#ref-Morales2020" role="doc-biblioref">MORALES et al., 2020</a>; <a href="references.html#ref-RAHMAN2021" role="doc-biblioref">RAHMAN et al., 2021</a>)</span>, posto que estas vias conferem vantagem de acesso a vias arteriais. Além disso, maior movimento implica em superior competitividade por usos do solo que dependam de maior visibilidade (comércio e serviços), o que pode impactar positivamente no valor para outros usos. Por outro lado, essas vias podem ser associadas a externalidades negativas de movimento (congestionamento, ruídos, poluição etc.), o que teria efeitos marginais negativos sobre os valores de imóveis <span class="citation" data-cites="Wang2020 Heyman2019">(<a href="references.html#ref-Heyman2019" role="doc-biblioref">HEYMAN; SOMMERVOLL, 2019</a>; <a href="references.html#ref-Wang2020" role="doc-biblioref">WANG; CHEN, 2020</a>)</span>.</p>
+<p>Dentre as muitas versões possíveis de centralidade, neste trabalho adota-se uma medida de <em>centralidade gravitacional</em>, calculada em duas etapas, conforme <a href="#eq-Cen" class="quarto-xref">Equação&nbsp;<span>5.11</span></a>:</p>
+<p><span id="eq-Cen"><span class="math display">\[
+\text{Cen} = EB_k \cdot GF_k
+\tag{5.11}\]</span></span></p>
+<p><em>EBk</em> corresponde a uma medida “<em>edge betweenness</em>”, a qual calcula o número de caminhos mínimos entre <em>i</em> e <em>j</em> que passam pelo trecho de referência <em>k</em>:</p>
+<p><span id="eq-EB"><span class="math display">\[
+EB_k = \sum_{i \neq j} \frac{\sigma_{ij}(k)}{\sigma_{ij}}
+\tag{5.12}\]</span></span></p>
+<p>Em que, <span class="math inline">\(\sigma_{ij} (k)\)</span> corresponde ao número de caminhos mínimos entre os trechos <em>i</em> e <em>j</em> que passam por <em>k</em>, e <span class="math inline">\(\sigma_{ij}\)</span> corresponde ao total de caminhos mínimos entre <em>i</em> e <em>j</em>. Em outras palavras, o trecho possui alto valor de EB quando muitos caminhos mínimos o perpassam, funcionando como um corredor importante de circulação.</p>
+<p><em>GFk</em> é o “fator gravitacional”, isto é, o quão relevante é cada trecho em termos de polarização do movimento, dada suas capacidades de origem e destino em função da população. A medida é calculada como:</p>
+<p><span id="eq-GF"><span class="math display">\[
+GF_k = \sum_{j:d_{ij\leq 7000}} \frac{W_i W_j}{d_{ij}}
+\tag{5.13}\]</span></span></p>
+<p>Em que, <em>Wi</em> e <em>Wj</em> correspondem à população dos trechos de origem e de destino, respectivamente, e <em>dij</em> é a extensão do caminho mínimo entre <em>i</em> e <em>j</em>, tendo em vista o raio limite de busca de 7000 metros.</p>
+<p>Adotou-se raio limite de 7000 metros com o duplo objetivo de otimizar o processamento dos cálculos e porque <span class="citation" data-cites="XIAO2017">XIAO (<a href="references.html#ref-XIAO2017" role="doc-biblioref">2017</a>)</span>, corroborado por <span class="citation" data-cites="Aguilar">AGUILAR (<a href="references.html#ref-Aguilar" role="doc-biblioref">2026</a>)</span>, entendem que esse raio se correlaciona ao movimento macroescalar urbano (automobilístico) em maior medida que o raio global. Adicionalmente, também para otimizar o desempenho dos cálculos, apenas para <em>GFk</em> limitou-se o raio de busca, dado que uma <em>EBk</em> limitada exigiria recalcular caminhos mínimos para muitos subconjuntos da rede.</p>
+<p>A rede viária foi modelada como um grafo primal não direcionado, em que vértices representam interseções viárias e arestas representam trechos. O comprimento destes foi utilizado como peso para as arestas. A população associada aos trechos foi previamente estimada a partir da divisão da população dos setores censitários <span class="citation" data-cites="ibge2023">(<a href="references.html#ref-ibge2023" role="doc-biblioref">INSTITUTO BRASILEIRO DE GEOGRAFIA E ESTATÍSTICA (IBGE), 2023</a>)</span> pelos trechos incidentes em cada setor. Como os cálculos são efetuados sobre os vértices, e não sobre as arestas, a população de cada vértice foi estimada como a média da população de cada aresta a ele relacionada.</p>
+<p>Para os cálculos foram empregados, no R, os pacotes “sfnetworks” para a conversão da rede viária em uma estrutura de rede espacial, e “igraph”, utilizado para conversão da rede em grafos.</p>
+<p>As medidas foram posteriormente normalizadas para o intervalo [0, 1], utilizando o percentil acumulado (<em>percent rank</em>). Como a centralidade exibe distribuição potencial, com forte assimetria positiva, aplicou-se previamente à normalização a transformação [ln(Cen + 1)].</p>
 
 
 <div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Aguilar" class="csl-entry" role="listitem">
+AGUILAR, R. L. <strong>Capital socioespacial e valorização imobiliária: uma análise baseada em modelos hedônicos de preços em Porto Alegre (RS)</strong>, 2026. tese de doutorado, Porto Alegre/RS: Universidade Federal do Rio Grande do Sul.
+</div>
+<div id="ref-Batty" class="csl-entry" role="listitem">
+BATTY, M. <strong>The New Science of Cities</strong>. MIT Press, 2013.
+</div>
+<div id="ref-CHEN2023" class="csl-entry" role="listitem">
+CHEN, Y.; JIAO, J.; FARAHI, A. Disparities in affecting factors of housing price: A machine learning approach to the effects of housing status, public transit, and density factors on single-family housing price. <strong>Cities</strong>, v. 140, p. 104432, 2023. Disponível em: &lt;<a href="https://www.sciencedirect.com/science/article/pii/S0264275123002445">https://www.sciencedirect.com/science/article/pii/S0264275123002445</a>&gt;.
+</div>
 <div id="ref-Embrapa2004" class="csl-entry" role="listitem">
 DRUCK, S.; CARVALHO, M. S.; CÂMARA, G.; MONTEIRO, A. MI. V. (ORG.). <strong>Análise Espacial de Dados Geográficos</strong>. Planaltina, DF: Embrapa Cerrados, 2004.
 </div>
+<div id="ref-Hansen1959" class="csl-entry" role="listitem">
+HANSEN, W. G. How Accessibility Shapes Land Use. <strong>Journal of the American Institute of Planners</strong>, v. 25, n. 2, p. 73–76, 1959. Routledge. Disponível em: &lt;<a href="https://doi.org/10.1080/01944365908978307">https://doi.org/10.1080/01944365908978307</a>&gt;.
 </div>
+<div id="ref-Heyman2019" class="csl-entry" role="listitem">
+HEYMAN, A. V.; SOMMERVOLL, D. E. House prices and relative location. <strong>Cities</strong>, v. 95, p. 102373, 2019. Disponível em: &lt;<a href="https://www.sciencedirect.com/science/article/pii/S0264275118312241">https://www.sciencedirect.com/science/article/pii/S0264275118312241</a>&gt;.
+</div>
+<div id="ref-ibge2023" class="csl-entry" role="listitem">
+INSTITUTO BRASILEIRO DE GEOGRAFIA E ESTATÍSTICA (IBGE). Censo 2022: Agregados por Setores Censitários preliminares: população e domicílios., 2023. online. Disponível em: &lt;<a href="https://www.ibge.gov.br/estatisticas/sociais/populacao/22827-censo-demografico-2022.html?edicao=39499\&amp;t=resultados">https://www.ibge.gov.br/estatisticas/sociais/populacao/22827-censo-demografico-2022.html?edicao=39499\&amp;t=resultados</a>&gt;.
+</div>
+<div id="ref-Krafta_Rauber_2020" class="csl-entry" role="listitem">
+KRAFTA, R.; RAUBER, A. Morfologia Urbana e a revolução dos dados. <strong>Revista de Morfologia Urbana</strong>, v. 8, n. 1, p. e00151, 2020. Disponível em: &lt;<a href="https://revistademorfologiaurbana.org/index.php/rmu/article/view/151">https://revistademorfologiaurbana.org/index.php/rmu/article/view/151</a>&gt;.
+</div>
+<div id="ref-Morales2020" class="csl-entry" role="listitem">
+MORALES, J.; STEIN, A.; FLACKE, J.; ZEVENBERGEN, J. Predictive land value modelling in Guatemala City using a geostatistical approach and Space Syntax. <strong>International Journal of Geographical Information Science</strong>, v. 34, n. 7, p. 1451–1474, 2020. Taylor &amp; Francis. Disponível em: &lt;<a href="https://doi.org/10.1080/13658816.2020.1725014">https://doi.org/10.1080/13658816.2020.1725014</a>&gt;.
+</div>
+<div id="ref-RAHMAN2021" class="csl-entry" role="listitem">
+RAHMAN, MD. M.; HOSSAIN, T.; CHOWDHURY, MD. R. H.; UDDIN, M. S. Effects of Transportation Accessibility on Residential Housing Rent: Evidence from Metropolitan City of Khulna, Bangladesh. <strong>Journal of Urban Planning and Development</strong>, v. 147, n. 2, p. 04021009, 2021. Disponível em: &lt;<a href="https://ascelibrary.org/doi/abs/10.1061/%28ASCE%29UP.1943-5444.0000668">https://ascelibrary.org/doi/abs/10.1061/%28ASCE%29UP.1943-5444.0000668</a>&gt;.
+</div>
+<div id="ref-Wang2020" class="csl-entry" role="listitem">
+WANG, C.-H.; CHEN, N. A geographically weighted regression approach to investigating local built-environment effects on home prices in the housing downturn, recovery, and subsequent increases. <strong>Journal of Housing and the Built Environment</strong>, v. 35, n. 4, p. 1283–1302, 2020. Springer. Disponível em: &lt;<a href="http://www.jstor.org/stable/45378909">http://www.jstor.org/stable/45378909</a>&gt;. Acesso em: 3/7/2026.
+</div>
+<div id="ref-XIAO2017" class="csl-entry" role="listitem">
+XIAO, Y. <strong>Urban morphology and housing market</strong>. New York: Springer, 2017.
+</div>
+</div>
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
