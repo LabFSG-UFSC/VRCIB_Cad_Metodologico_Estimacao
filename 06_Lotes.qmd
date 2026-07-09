@@ -1,0 +1,14 @@
+# Análise de dados de lotes urbanos
+
+Os dados de lotes urbanos foram analisados a partir de modelos de regressão
+linear generalizada, seguido de krigagem ordinária dos resíduos, resultando num
+modelo final de regressão linear ordinária com os resíduos krigados como
+variável explicativa. Nas seções abaixo esse procedimento é detalhado.
+
+## Modelo linear generalizado
+
+
+## Krigagem dos resíduos
+
+
+## Modelo final

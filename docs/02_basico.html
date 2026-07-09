@@ -23,7 +23,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -73,6 +93,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="cover-style.css">
@@ -181,8 +230,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_ImoveisEdificados.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Análise de dados dos imóveis edificados</span></span></a>
+  <a href="./05_variaveis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Geração de variáveis explicativas</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -227,7 +276,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Metodologia Geral</span></h1>
+<h1 class="title"><span id="sec-metodo" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Metodologia Geral</span></span></h1>
 </div>
 
 
@@ -244,9 +293,27 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Para o projeto do Valor de Referência (VR) do Cadastro Imobiliário Brasileiro (CIB) foi adotado o método evolutivo, da <span class="quarto-unresolved-ref">?eq-ME</span>:</p>
+<p>Para o projeto do Valor de Referência (VR) do Cadastro Imobiliário Brasileiro (CIB) foi adotado o <strong>Método Evolutivo</strong>, da <a href="#eq-ME" class="quarto-xref">Equação&nbsp;<span>2.1</span></a>, método consagrado que estima o valor de mercado de um imóvel através da soma dos seus componentes (terra e capital aplicado):</p>
+<p><span id="eq-ME"><span class="math display">\[
+V_{\text{Imóvel}} = (V_{\text{Terreno}} + V_{\text{Benfeitorias}})\cdot FC
+\tag{2.1}\]</span></span></p>
+<p>Em que:</p>
+<ul>
+<li><span class="math inline">\(V_{\text{Imóvel}}\)</span> é o valor de mercado do imóvel acabado;</li>
+<li><span class="math inline">\(V_{\text{Terreno}}\)</span> é o valor de mercado do lote sobre o qual o imóvel encontra-se edificado;</li>
+<li><span class="math inline">\(V_{\text{Benfeitorias}}\)</span> é o valor do capital aplicado em benfeitorias no imóvel e;</li>
+<li><span class="math inline">\(FC\)</span> é um “fator de comercialização” empregado para ajustar a diferença entre o valor real de mercado do imóvel e a diferença entre a soma dos seus componentes.</li>
+</ul>
+<p>Os valores de benfeitorias são calculados através dos custos de construção divulgados pelos SINDUSCON locais. Os valores dos terrenos, por outro lado, devem ser estimados via modelos lineares, geoestatística ou algoritmos preditivos de aprendizado de máquina. Para o fator de comercialização, o ideal é que este seja inferido através de dados de mercado de imóveis edificados.</p>
+<p>Neste projeto procura-se extrair o máximo de informação de todo o conjunto de dados de mercado, que envolvem anúncios não apenas de lotes, mas também de imóveis edificados, como casas, apartamentos e outros, tanto de venda quanto de locação.</p>
+<p><span class="citation" data-cites="itabiraBID">SILVA et al. (<a href="references.html#ref-itabiraBID" role="doc-biblioref">2024</a>)</span></p>
 
 
+<div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-itabiraBID" class="csl-entry" role="listitem">
+SILVA, E. DA; RAMOS DA SILVA, L.; VIEIRA, C. A. O.; OLIVEIRA, F. H. Avaliação Em Massa e Imposto Predial Em <span>Itabira</span>, <span>Brasil</span>. <strong>Mercado <span>Imobiliário</span> e <span>Imposto Predial</span>: <span>Aplicações</span> de Técnicas de Avaliação Em Massa</strong>, 2024. Banco Interamericano de Desenvolvimento. Divisão de Gestão Fiscal: Huáscar Eguino; Diego Erba.
+</div>
+</div>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

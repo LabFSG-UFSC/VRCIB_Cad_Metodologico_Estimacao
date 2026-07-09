@@ -1,0 +1,111 @@
+# Geração de variáveis explicativas
+
+Além da variável `PC` (*Padrão Construtivo*), obtida através de algoritmos de
+*clusterização*, conforme @sec-cluster, outras variáveis explicativas foram
+criadas visando a obtenção de um melhor ajuste para os modelos estatísticos,
+como a variável `RPCSMK` (*Renda per papita, em salários mínimos, krigada*) e
+`VUM2` (*Valor Unitário do metro quadrado edificado*).
+
+## Renda Krigada
+
+(VILE)
+
+## Valor Unitário do metro quadrado edificado {#sec-VUM2}
+
+Conforme já explicitado no @sec-metodo,o método adotado neste projeto para a 
+avaliação em massa dos imóveis é o **método evolutivo**. Assim, neste projeto,
+os dados coletados de imóveis edificados são utilizados de maneira secundária 
+(ou auxiliar), de maneira que ajudem a explicar o fenômeno da *localização*.
+
+### Modelo Linear
+
+Para a obtenção da variável `VUM2` inicialmente é ajustado um modelo de 
+regressão linear múltipla para descrever o comportamento do mercado imobiliário 
+de casas e apartamentos. 
+
+(CONTINUA)
+
+###### Geração da superfície de VU de m2 construído
+
+Após o ajuste do modelo de mínimos quadrados ordinários, os dados da amostra
+utilizados para o ajuste do modelo foram homogeneizados de acordo com fatores de
+homogeneização estimados diretamente do modelo. Por exemplo, para a variável
+área, foi derivado o fator área, conforme a @eq-FatorArea:
+
+$$F_{\text{Área}} = \left ( \frac{A_\text{imóvel}}{100} \right)^{-0,25}$$ {#eq-FatorArea}
+
+Veja @nte-fatores para entender com é feita a derivação racional de fatores de 
+homogeneização.
+
+Após o procedimento de homoegeneização, foi gerada uma superfície de valores de
+metro quadrado construído com os dados homogeneizados através do algoritmo IDW
+(*inverse distance weighting*).
+
+::: {#nte-idw .callout-note}
+## Inverse Distance Weighting
+
+Segundo @Embrapa2004 [p. 83], "uma alternativa simples para gerar uma
+superfície bidimensional" consiste em ajustar uma função bidimensional sobre as
+amostras, prevendo valores em uma grade ($\hat z_i$), com a seguinte formulação:
+
+$$
+\hat z_i = \frac{\sum_{j = 1}^n w_{ij}z_j}{\sum_{j=1}^n w_{ij}}
+$$ {#eq-IDW}
+
+Em que:
+
+- $z_j$ é o valor da cota (VU) de uma amostra vizinha do ponto $i$ da grade;
+- $w_{ij}$ é um fator de ponderação.
+
+Com base neste esquema básico supra-mencionado, é possível gerar vários
+interpoladores (vizinho mais próximo, média simples ou média ponderada). A 
+ponderação mais usada consiste em adotar pesos que variam com o inverso de uma 
+potência $k$ da distância euclidiana do ponto da amostra ao ponto da grade em 
+que se deseja prever valores ($d_{ij}$), assim:
+
+$$
+w_{ij} = \frac{1}{d_{ij}^k}
+$$ {#eq-IDW2}
+
+Em que:
+  - $d_{ij} = \sqrt{(x_i-x_j)^2 + (y_i - y_j)^2}$
+:::
+
+
+::: {#nte-fatores .callout-note}
+## Derivação Racional de Fatores
+
+A derivação racional de fatores de homogeneização é feita de acordo com os
+coeficientes estimados em um modelo de regressão linear múltipla (RLM).
+
+Os fatores serão aditivos quando o modelo RLM for ajustado na escala de preços
+unitários (PU), ou serão multiplicativos quando o modelo RLM for ajustado com a
+transformação da variável dependente para a escala logaritmica, o que é usual na
+Engenharia de Avaliações.
+
+Para entender, basta perceber que, para um modelo ajustado na escala 
+logaritmica, tem-se:
+
+$$\widehat{\log(PU)} = \hat \beta_0 + \hat \beta_1 x_1 + \ldots + \hat\beta_kx_k$$ {#eq-ModeloMultiplicativo}
+
+Efetuando a exponenciação em ambos os lados de @eq-ModeloMultiplicativo, tem-se:
+
+$$\widehat{PU} = \exp(\hat \beta_0 + \hat \beta_1 x_1 + \ldots + \hat\beta_kx_k)$$ {#eq-ModeloMultiplicativo2}
+
+Como a exponencial da soma é o produto das exponenciais, a 
+@eq-ModeloMultiplicativo2 torna-se:
+
+$$\widehat{PU} = \exp(\hat \beta_0)\cdot\exp(\hat \beta_1 x_1)\cdot \ldots \cdot \exp(\hat\beta_kx_k)$$ {#eq-ModeloMultiplicativo3}
+
+Donde entende-se o motivo dos fatores derivados com este modelo serem 
+multiplicativos, pois, deste modelo, deduz-se:
+
+$$F_1 = \exp(\hat \beta_1 x_1); F_2 = \exp(\hat \beta_2 x_2); \ldots ; F_k =  \exp(\hat\beta_kx_k)$$
+:::
+
+
+
+
+## Capital Sociespacial
+
+(RAMON)

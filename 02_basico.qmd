@@ -1,5 +1,34 @@
-# Metodologia Geral
+# Metodologia Geral {#sec-metodo}
 
 Para o projeto do Valor de Referência (VR) do Cadastro Imobiliário Brasileiro 
-(CIB) foi adotado o método evolutivo, da @eq-ME:
+(CIB) foi adotado o **Método Evolutivo**, da @eq-ME, método consagrado que 
+estima o valor de mercado de um imóvel através da soma dos seus componentes 
+(terra e capital aplicado):
 
+$$
+V_{\text{Imóvel}} = (V_{\text{Terreno}} + V_{\text{Benfeitorias}})\cdot FC
+$$ {#eq-ME}
+
+Em que:
+
+-   $V_{\text{Imóvel}}$ é o valor de mercado do imóvel acabado;
+-   $V_{\text{Terreno}}$ é o valor de mercado do lote sobre o qual o imóvel 
+encontra-se edificado;
+-   $V_{\text{Benfeitorias}}$ é o valor do capital aplicado em benfeitorias no 
+imóvel e;
+-   $FC$ é um "fator de comercialização" empregado para ajustar a diferença 
+entre o valor real de mercado do imóvel e a diferença entre a soma dos seus 
+componentes.
+
+Os valores de benfeitorias são calculados através dos custos de construção
+divulgados pelos SINDUSCON locais. Os valores dos terrenos, por outro lado,
+devem ser estimados via modelos lineares, geoestatística ou algoritmos
+preditivos de aprendizado de máquina. Para o fator de comercialização, o ideal é
+que este seja inferido através de dados de mercado de imóveis edificados.
+
+Neste projeto procura-se extrair o máximo de informação de todo o conjunto de 
+dados de mercado, que envolvem anúncios não apenas de lotes, mas também de 
+imóveis edificados, como casas, apartamentos e outros, tanto de venda quanto de 
+locação.
+
+@itabiraBID

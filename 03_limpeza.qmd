@@ -34,7 +34,7 @@ de muitos falsos *outliers* da amostra. Para entender, considere-se os
 *bagplots* (ou diagramas de saco) das Figuras -@fig-bagplot e -@fig-bagplot2[^2].
 
 [^2]: O *bagplot* é uma generalização do *boxplot* para duas dimensões, proposto
-por @Bagplot1999, baseado nos conceitos de Profundidade de Tukey, ou 
+por @Rousseeuw1999, baseado nos conceitos de Profundidade de Tukey, ou 
 Profundidade do meio-espaço e na mediana profunda, ou mediana bivariada [@Tukey1975].
 
 Na @fig-bagplot podem ser vistos os diagramas de caixa de cada variável, às

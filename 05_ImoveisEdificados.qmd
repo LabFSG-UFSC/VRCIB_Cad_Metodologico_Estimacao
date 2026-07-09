@@ -1,5 +1,0 @@
-# Análise de dados dos imóveis edificados
-
-Neste projeto os dados coletados de imóveis edificados foram utilizados de
-maneira secundária ou auxiliar, haja vista que o método adotado para a 
-avaliação em massa dos imóveis é o método evolutivo.

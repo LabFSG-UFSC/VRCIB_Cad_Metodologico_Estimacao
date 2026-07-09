@@ -1,4 +1,4 @@
-# Métodos de classificação
+# Métodos de classificação {#sec-cluster}
 
 Para este projeto foram utilizados métodos robustos de classificação 
 (ou *clusterização*). Assim como no caso da regressão robusta, é mais fácil 

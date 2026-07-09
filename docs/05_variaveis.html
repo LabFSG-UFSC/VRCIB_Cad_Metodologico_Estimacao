@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; Análise de dados dos imóveis edificados – Caderno Metodológico</title>
+<title>5&nbsp; Geração de variáveis explicativas – Caderno Metodológico</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,7 +23,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -73,6 +93,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="cover-style.css">
@@ -87,7 +136,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05_ImoveisEdificados.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Análise de dados dos imóveis edificados</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05_variaveis.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Geração de variáveis explicativas</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
@@ -181,8 +230,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_ImoveisEdificados.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Análise de dados dos imóveis edificados</span></span></a>
+  <a href="./05_variaveis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Geração de variáveis explicativas</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -219,15 +268,26 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Índice</h2>
+   
+  <ul>
+  <li><a href="#renda-krigada" id="toc-renda-krigada" class="nav-link active" data-scroll-target="#renda-krigada"><span class="header-section-number">5.1</span> Renda Krigada</a></li>
+  <li><a href="#sec-VUM2" id="toc-sec-VUM2" class="nav-link" data-scroll-target="#sec-VUM2"><span class="header-section-number">5.2</span> Valor Unitário do metro quadrado edificado</a>
+  <ul>
+  <li><a href="#modelo-linear" id="toc-modelo-linear" class="nav-link" data-scroll-target="#modelo-linear"><span class="header-section-number">5.2.1</span> Modelo Linear</a></li>
+  </ul></li>
+  <li><a href="#capital-sociespacial" id="toc-capital-sociespacial" class="nav-link" data-scroll-target="#capital-sociespacial"><span class="header-section-number">5.3</span> Capital Sociespacial</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Caderno_Metodologico/edit/main/05_variaveis.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Análise de dados dos imóveis edificados</span></h1>
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Geração de variáveis explicativas</span></h1>
 </div>
 
 
@@ -244,9 +304,86 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Neste projeto os dados coletados de imóveis edificados foram utilizados de maneira secundária ou auxiliar, haja vista que o método adotado para a avaliação em massa dos imóveis é o método evolutivo.</p>
+<p>Além da variável <code>PC</code> (<em>Padrão Construtivo</em>), obtida através de algoritmos de <em>clusterização</em>, conforme <a href="04_classificacao.html" class="quarto-xref"><span>Capítulo 4</span></a>, outras variáveis explicativas foram criadas visando a obtenção de um melhor ajuste para os modelos estatísticos, como a variável <code>RPCSMK</code> (<em>Renda per papita, em salários mínimos, krigada</em>) e <code>VUM2</code> (<em>Valor Unitário do metro quadrado edificado</em>).</p>
+<section id="renda-krigada" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="renda-krigada"><span class="header-section-number">5.1</span> Renda Krigada</h2>
+<p>(VILE)</p>
+</section>
+<section id="sec-VUM2" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="sec-VUM2"><span class="header-section-number">5.2</span> Valor Unitário do metro quadrado edificado</h2>
+<p>Conforme já explicitado no <a href="02_basico.html" class="quarto-xref"><span>Capítulo 2</span></a>,o método adotado neste projeto para a avaliação em massa dos imóveis é o <strong>método evolutivo</strong>. Assim, neste projeto, os dados coletados de imóveis edificados são utilizados de maneira secundária (ou auxiliar), de maneira que ajudem a explicar o fenômeno da <em>localização</em>.</p>
+<section id="modelo-linear" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="modelo-linear"><span class="header-section-number">5.2.1</span> Modelo Linear</h3>
+<p>Para a obtenção da variável <code>VUM2</code> inicialmente é ajustado um modelo de regressão linear múltipla para descrever o comportamento do mercado imobiliário de casas e apartamentos.</p>
+<p>(CONTINUA)</p>
+<section id="geração-da-superfície-de-vu-de-m2-construído" class="level6" data-number="5.2.1.0.0.1">
+<h6 data-number="5.2.1.0.0.1" class="anchored" data-anchor-id="geração-da-superfície-de-vu-de-m2-construído"><span class="header-section-number">5.2.1.0.0.1</span> Geração da superfície de VU de m2 construído</h6>
+<p>Após o ajuste do modelo de mínimos quadrados ordinários, os dados da amostra utilizados para o ajuste do modelo foram homogeneizados de acordo com fatores de homogeneização estimados diretamente do modelo. Por exemplo, para a variável área, foi derivado o fator área, conforme a <a href="#eq-FatorArea" class="quarto-xref">Equação&nbsp;<span>5.1</span></a>:</p>
+<p><span id="eq-FatorArea"><span class="math display">\[F_{\text{Área}} = \left ( \frac{A_\text{imóvel}}{100} \right)^{-0,25} \tag{5.1}\]</span></span></p>
+<p>Veja <a href="#nte-fatores" class="quarto-xref">Note&nbsp;<span>5.2</span></a> para entender com é feita a derivação racional de fatores de homogeneização.</p>
+<p>Após o procedimento de homoegeneização, foi gerada uma superfície de valores de metro quadrado construído com os dados homogeneizados através do algoritmo IDW (<em>inverse distance weighting</em>).</p>
+<div id="nte-idw" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota&nbsp;5.1: Inverse Distance Weighting
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Segundo <span class="citation" data-cites="Embrapa2004">DRUCK et al. (<a href="references.html#ref-Embrapa2004" role="doc-biblioref">2004, p. 83</a>)</span>, “uma alternativa simples para gerar uma superfície bidimensional” consiste em ajustar uma função bidimensional sobre as amostras, prevendo valores em uma grade (<span class="math inline">\(\hat z_i\)</span>), com a seguinte formulação:</p>
+<p><span id="eq-IDW"><span class="math display">\[
+\hat z_i = \frac{\sum_{j = 1}^n w_{ij}z_j}{\sum_{j=1}^n w_{ij}}
+\tag{5.2}\]</span></span></p>
+<p>Em que:</p>
+<ul>
+<li><span class="math inline">\(z_j\)</span> é o valor da cota (VU) de uma amostra vizinha do ponto <span class="math inline">\(i\)</span> da grade;</li>
+<li><span class="math inline">\(w_{ij}\)</span> é um fator de ponderação.</li>
+</ul>
+<p>Com base neste esquema básico supra-mencionado, é possível gerar vários interpoladores (vizinho mais próximo, média simples ou média ponderada). A ponderação mais usada consiste em adotar pesos que variam com o inverso de uma potência <span class="math inline">\(k\)</span> da distância euclidiana do ponto da amostra ao ponto da grade em que se deseja prever valores (<span class="math inline">\(d_{ij}\)</span>), assim:</p>
+<p><span id="eq-IDW2"><span class="math display">\[
+w_{ij} = \frac{1}{d_{ij}^k}
+\tag{5.3}\]</span></span></p>
+<p>Em que: - <span class="math inline">\(d_{ij} = \sqrt{(x_i-x_j)^2 + (y_i - y_j)^2}\)</span></p>
+</div>
+</div>
+<div id="nte-fatores" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota&nbsp;5.2: Derivação Racional de Fatores
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A derivação racional de fatores de homogeneização é feita de acordo com os coeficientes estimados em um modelo de regressão linear múltipla (RLM).</p>
+<p>Os fatores serão aditivos quando o modelo RLM for ajustado na escala de preços unitários (PU), ou serão multiplicativos quando o modelo RLM for ajustado com a transformação da variável dependente para a escala logaritmica, o que é usual na Engenharia de Avaliações.</p>
+<p>Para entender, basta perceber que, para um modelo ajustado na escala logaritmica, tem-se:</p>
+<p><span id="eq-ModeloMultiplicativo"><span class="math display">\[\widehat{\log(PU)} = \hat \beta_0 + \hat \beta_1 x_1 + \ldots + \hat\beta_kx_k \tag{5.4}\]</span></span></p>
+<p>Efetuando a exponenciação em ambos os lados de <a href="#eq-ModeloMultiplicativo" class="quarto-xref">Equação&nbsp;<span>5.4</span></a>, tem-se:</p>
+<p><span id="eq-ModeloMultiplicativo2"><span class="math display">\[\widehat{PU} = \exp(\hat \beta_0 + \hat \beta_1 x_1 + \ldots + \hat\beta_kx_k) \tag{5.5}\]</span></span></p>
+<p>Como a exponencial da soma é o produto das exponenciais, a <a href="#eq-ModeloMultiplicativo2" class="quarto-xref">Equação&nbsp;<span>5.5</span></a> torna-se:</p>
+<p><span id="eq-ModeloMultiplicativo3"><span class="math display">\[\widehat{PU} = \exp(\hat \beta_0)\cdot\exp(\hat \beta_1 x_1)\cdot \ldots \cdot \exp(\hat\beta_kx_k) \tag{5.6}\]</span></span></p>
+<p>Donde entende-se o motivo dos fatores derivados com este modelo serem multiplicativos, pois, deste modelo, deduz-se:</p>
+<p><span class="math display">\[F_1 = \exp(\hat \beta_1 x_1); F_2 = \exp(\hat \beta_2 x_2); \ldots ; F_k =  \exp(\hat\beta_kx_k)\]</span></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="capital-sociespacial" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="capital-sociespacial"><span class="header-section-number">5.3</span> Capital Sociespacial</h2>
+<p>(RAMON)</p>
 
 
+<div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Embrapa2004" class="csl-entry" role="listitem">
+DRUCK, S.; CARVALHO, M. S.; CÂMARA, G.; MONTEIRO, A. MI. V. (ORG.). <strong>Análise Espacial de Dados Geográficos</strong>. Planaltina, DF: Embrapa Cerrados, 2004.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -669,7 +806,7 @@ ul.task-list li input[type="checkbox"] {
 </div>   
     <div class="nav-footer-center">
 <p><img src="img/Logo com RFB e UFSC.png" class="img-fluid" width="250"></p>
-<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Caderno_Metodologico/edit/main/05_ImoveisEdificados.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Caderno_Metodologico/edit/main/05_variaveis.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>
