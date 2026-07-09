@@ -25,7 +25,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -75,6 +130,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="cover-style.css">
@@ -244,7 +328,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Índice</h2>
    
   <ul>
-  <li><a href="#modelos-multiníveis" id="toc-modelos-multiníveis" class="nav-link active" data-scroll-target="#modelos-multiníveis"><span class="header-section-number">7.1</span> Modelos multiníveis</a></li>
+  <li><a href="#modelo-linear-hierárquico-mlh" id="toc-modelo-linear-hierárquico-mlh" class="nav-link active" data-scroll-target="#modelo-linear-hierárquico-mlh"><span class="header-section-number">7.1</span> Modelo Linear Hierárquico (MLH)</a></li>
   <li><a href="#homogeneização" id="toc-homogeneização" class="nav-link" data-scroll-target="#homogeneização"><span class="header-section-number">7.2</span> Homogeneização</a></li>
   <li><a href="#geração-da-superfície-de-valores-unitários-de-lotes" id="toc-geração-da-superfície-de-valores-unitários-de-lotes" class="nav-link" data-scroll-target="#geração-da-superfície-de-valores-unitários-de-lotes"><span class="header-section-number">7.3</span> Geração da superfície de valores unitários de lotes</a></li>
   <li><a href="#modelo-final" id="toc-modelo-final" class="nav-link" data-scroll-target="#modelo-final"><span class="header-section-number">7.4</span> Modelo final</a></li>
@@ -281,8 +365,406 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Os dados de lotes urbanos foram analisados a partir de modelos de regressão linear generalizada, seguido de krigagem ordinária dos resíduos, resultando num modelo final de regressão linear ordinária com os resíduos krigados como variável explicativa. Nas seções abaixo esse procedimento é detalhado.</p>
-<section id="modelos-multiníveis" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="modelos-multiníveis"><span class="header-section-number">7.1</span> Modelos multiníveis</h2>
+<section id="modelo-linear-hierárquico-mlh" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="modelo-linear-hierárquico-mlh"><span class="header-section-number">7.1</span> Modelo Linear Hierárquico (MLH)</h2>
+<p>Antes do ajuste dos modelos previsores foi necessário o tratamento de variáveis. Merece destaque o fato de que a distância ao litoral (“dist_litoral”) somente foi calculada para municípios costeiros, possuindo valores ausentes nos demais contextos. Para lidar com esse inconveniente, foi incluída a variável dicotômica “litoraneo” (1 = município costeiro; 0 = município interiorano) e os valores ausentes de “dist_litoral” (todos com “litorâneo” = 0) foram substituídos por 0.</p>
+<p>Em seguida foi ajustado um modelo linear hierárquico (MLH, pacote <em>lme4</em>) condicionado à verificação de multicolinearidade, a partir dos valores de <em>Variance Inflation Factor</em> (VIF). O MLH captura a relação entre variáveis explicativas (efeitos fixos) e a variável explicada, considerando a estrutura hierárquica dos dados por meio de efeitos aleatórios, neste trabalho definidos a partir de agrupamentos espaciais <span class="citation" data-cites="Raudenbush2002">(<a href="references.html#ref-Raudenbush2002" role="doc-biblioref">RAUDENBUSH, 2002</a>)</span>. Foram empregados como níveis hierárquicos os municípios (“cd_mun”), os <em>clusters</em> de localização para lotes (“cluster”), e os setores censitários (“cd_setor”). A especificação do MLH é:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>MLH <span class="ot">&lt;-</span> <span class="fu">lmer</span>(<span class="fu">log</span>(valor_unitario) <span class="sc">~</span> <span class="fu">log</span>(area<span class="sc">/</span><span class="dv">450</span>) <span class="sc">+</span> <span class="fu">log</span>(dist_cbd_m<span class="sc">/</span><span class="dv">100</span>) <span class="sc">+</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>              classe_declividade <span class="sc">+</span> <span class="fu">log1p</span>(dist_litoral_cond<span class="sc">/</span><span class="dv">100</span>) <span class="sc">+</span> litoraneo <span class="sc">+</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>              impermeab <span class="sc">+</span> <span class="fu">log1p</span>(d_demo_h_km2_setor) <span class="sc">+</span> <span class="fu">log1p</span>(dens_eq_saud_setor) <span class="sc">+</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>              rend_med_pct_sm_setor <span class="sc">+</span> <span class="fu">sqrt</span>(var_ren_med_setor) <span class="sc">+</span> ace <span class="sc">+</span> cen <span class="sc">+</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>              VUM2 <span class="sc">+</span> <span class="fu">log1p</span>(altura_media_muni_500m) <span class="sc">+</span> ndvi_media <span class="sc">+</span> </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">log1p</span>(ndbi_media) <span class="sc">+</span> <span class="fu">log1p</span>(ui_media) <span class="sc">+</span> bci_media_media_setor <span class="sc">+</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>              (<span class="dv">1</span> <span class="sc">|</span> cluster) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cd_mun) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cd_setor),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> Lote8)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>A definição das variáveis consta no Quadro 1.</p>
+<p><strong>Quadro 1.</strong> Definição das variáveis empregadas nos modelos. Elaboração própria.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 70%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variável</th>
+<th style="text-align: left;">Definição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><em>valor_unitario</em></td>
+<td style="text-align: left;">Valor unitário do lote, obtido pela razão entre o valor absoluto registrado no anúncio e a área.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>area/450</em></td>
+<td style="text-align: left;">Área do lote homogeneizada (dividida pela área do lote padrão, estipulada em 450 m²).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>dist_cbd_m/100</em></td>
+<td style="text-align: left;">Distância ao centro principal (dividida por 100).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>classe_declividade</em></td>
+<td style="text-align: left;">Classe de declividade do terreno, variando de 1 (plano) a 6 (escarpado).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>dist_litoral_cond/100</em></td>
+<td style="text-align: left;">Distância ao litoral condicionada a municípios costeiros (dividida por 100).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>litoraneo</em></td>
+<td style="text-align: left;">Variável dicotômica para municípios costeiros.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>impermeab</em></td>
+<td style="text-align: left;">Percentagem de solo impermeabilizado no setor censitário.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>d_demo_h_km2_setor</em></td>
+<td style="text-align: left;">Densidade demográfica (hab/km²) do setor censitário.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>dens_eq_saud_setor</em></td>
+<td style="text-align: left;">Densidade de equipamentos de saúde (n/km²) do setor censitário.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>rend_med_pct_sm_setor</em></td>
+<td style="text-align: left;">Renda per capita média em salários mínimos do setor censitário</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>var_ren_med_setor</em></td>
+<td style="text-align: left;">Variância da renda média do chefe do domicílio, por setor censitário.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>ace</em></td>
+<td style="text-align: left;">Acessibilidade.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>cen</em></td>
+<td style="text-align: left;">Centralidade.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>VUM2</em></td>
+<td style="text-align: left;">Valor do m² edificado, estimado a partir do modelo com imóveis edificados.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>altura_media_muni_500m</em></td>
+<td style="text-align: left;">Altura média das edificações em raio de 500 m a partir da observação.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>ndvi_media</em></td>
+<td style="text-align: left;">Índice de vegetação diferenciada normalizada média em raio de 500 m a partir da observação.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>ndbi_media</em></td>
+<td style="text-align: left;">Índice de áreas construídas por diferença normalizada em raio de 500 m a partir da observação.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>ui_media</em></td>
+<td style="text-align: left;">Índice de urbanização em raio de 500 m a partir da observação.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>bci_media</em></td>
+<td style="text-align: left;">Índice de composição biofísica em raio de 500 m a partir da observação.</td>
+</tr>
+</tbody>
+</table>
+<p>Foram sucessivamente removidas as variáveis com maiores valores (para <span class="math inline">\(VIF \geq 10\)</span>) e coeficientes menos significativos, o que resultou na exclusão de <code>ndbi_media</code> (<span class="math inline">\(VIF = 145,1532;\; t = -0,809\)</span>), <code>rndsi_media</code> (<span class="math inline">\(VIF = 50,6742;\; t = 2,742\)</span>) e <code>ui_media</code> (<span class="math inline">\(VIF = 191,4915;\; t = -3,014\)</span>).</p>
+<p>As. Tabelas <a href="#tbl-MLH" class="quarto-xref"><span>7.1</span></a>, <a href="#tbl-QualFit" class="quarto-xref"><span>7.2</span></a> e <a href="#tbl-VarNiveis" class="quarto-xref"><span>7.3</span></a> exibem os resultados do modelo definitivo empregado.</p>
+<div id="tbl-MLH" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-MLH-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;7.1: Modelo linear hierárquico para lotes das capitais dos Lotes 1 e 2. Elaboração própria.
+</figcaption>
+<div aria-describedby="tbl-MLH-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 16%">
+<col style="width: 19%">
+<col style="width: 12%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Efeitos fixos</th>
+<th style="text-align: right;">Estimativa</th>
+<th style="text-align: right;">Erro-padrão</th>
+<th style="text-align: right;">Valor-t</th>
+<th style="text-align: right;">VIF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">5,9880</td>
+<td style="text-align: right;">0,2216</td>
+<td style="text-align: right;">27,7170</td>
+<td style="text-align: right;">/</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log(area/450)</td>
+<td style="text-align: right;">-0,3116</td>
+<td style="text-align: right;">0,0042</td>
+<td style="text-align: right;">-73,663</td>
+<td style="text-align: right;">1,0175</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log(dist_cbd_m/100)</td>
+<td style="text-align: right;">-0,0352</td>
+<td style="text-align: right;">0,0221</td>
+<td style="text-align: right;">-1,5950</td>
+<td style="text-align: right;">1,8089</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">classe_declividade</td>
+<td style="text-align: right;">-0,0150</td>
+<td style="text-align: right;">0,0052</td>
+<td style="text-align: right;">-2,8800</td>
+<td style="text-align: right;">1,0314</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log1p(dist_litoral_cond/100)</td>
+<td style="text-align: right;">-0,0466</td>
+<td style="text-align: right;">0,0191</td>
+<td style="text-align: right;">-2,4390</td>
+<td style="text-align: right;">1,1828</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">litoraneo</td>
+<td style="text-align: right;">0,6687</td>
+<td style="text-align: right;">0,2765</td>
+<td style="text-align: right;">2,4180</td>
+<td style="text-align: right;">1,0994</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">impermeab</td>
+<td style="text-align: right;">0,0019</td>
+<td style="text-align: right;">0,0007</td>
+<td style="text-align: right;">2,5980</td>
+<td style="text-align: right;">2,1173</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log1p(d_demo_h_km2_setor)</td>
+<td style="text-align: right;">-0,0438</td>
+<td style="text-align: right;">0,0105</td>
+<td style="text-align: right;">-4,1640</td>
+<td style="text-align: right;">1,7830</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log1p(dens_eq_saud_setor)</td>
+<td style="text-align: right;">0,0281</td>
+<td style="text-align: right;">0,0046</td>
+<td style="text-align: right;">6,1670</td>
+<td style="text-align: right;">1,1548</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rend_med_pct_sm_setor</td>
+<td style="text-align: right;">0,1601</td>
+<td style="text-align: right;">0,0104</td>
+<td style="text-align: right;">15,3880</td>
+<td style="text-align: right;">2,4180</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sqrt(var_ren_med_setor)</td>
+<td style="text-align: right;">-1,799e-06</td>
+<td style="text-align: right;">1,062e-06</td>
+<td style="text-align: right;">-1,6940</td>
+<td style="text-align: right;">1,3523</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ace</td>
+<td style="text-align: right;">0,1768</td>
+<td style="text-align: right;">0,0563</td>
+<td style="text-align: right;">3,1400</td>
+<td style="text-align: right;">2,0417</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cen</td>
+<td style="text-align: right;">0,2960</td>
+<td style="text-align: right;">0,0371</td>
+<td style="text-align: right;">7,9770.</td>
+<td style="text-align: right;">1,2631</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">I(VUM2/4870)</td>
+<td style="text-align: right;">0,6442</td>
+<td style="text-align: right;">0,0386</td>
+<td style="text-align: right;">16,6790</td>
+<td style="text-align: right;">1,9282</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log1p(altura_media_muni_500m)</td>
+<td style="text-align: right;">0,3223</td>
+<td style="text-align: right;">0,0354</td>
+<td style="text-align: right;">9,1110</td>
+<td style="text-align: right;">1,7466</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ndvi_media</td>
+<td style="text-align: right;">-0,6657</td>
+<td style="text-align: right;">0,0809</td>
+<td style="text-align: right;">-8,2310</td>
+<td style="text-align: right;">1,8428</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">bci_media</td>
+<td style="text-align: right;">0,6146</td>
+<td style="text-align: right;">0,2334</td>
+<td style="text-align: right;">2,633</td>
+<td style="text-align: right;">1,2803</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div id="tbl-QualFit" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-QualFit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;7.2: Estatísticas de qualidade de ajuste para o modelo MLH. Elaboração própria.
+</figcaption>
+<div aria-describedby="tbl-QualFit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Estatística</th>
+<th style="text-align: right;">Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(R^2\)</span> condicional (efeitos fixos e aleatórios)</td>
+<td style="text-align: right;">0,8990</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(R^2\)</span> marginal (efeitos fixos)</td>
+<td style="text-align: right;">0,3780</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AIC</td>
+<td style="text-align: right;">5491,5660</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div id="tbl-VarNiveis" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-VarNiveis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;7.3: Variância dos efeitos aleatórios. Elaboração própria.
+</figcaption>
+<div aria-describedby="tbl-VarNiveis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Nível</th>
+<th style="text-align: right;">Var.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Município</td>
+<td style="text-align: right;">0,1357</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cluster</td>
+<td style="text-align: right;">0,0323</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Setor</td>
+<td style="text-align: right;">0,1050</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Residual.</td>
+<td style="text-align: right;">0,0527</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Foi efetuada análise dos resíduos, indicando que existe desvio da distribuição teórica (<span class="math inline">\(D = 0,0710; \; p &lt; 2,2e-16\)</span>), mas ele é muito pequeno, o que é normal, diante do grande número de observações. Existe dispersão de 4,61% (<span class="math inline">\(p &lt; 2,2e-16\)</span>), acima do esperado, porém o valor é pequeno e não preocupante. Por fim, revelou-se 0,30% de outliers (<span class="math inline">\(p &lt; 2,2e-16\)</span>), cifra plausível para quase 15 mil observações em nove cidades.</p>
+<p>Além do <span class="math inline">\(R^2\)</span> e do AIC, o ajuste do modelo foi avaliado por meio das métricas <em>Raiz do Erro Quadrático Médio</em> (<strong>RMSE</strong>) e <em>Erro Percentual Absoluto Médio</em> (<strong>MAPE</strong>), que apresentaram valores de 578,46 e 0,1529, respectivamente. O <strong>RMSE</strong> indica que, em média, as estimativas apresentam desvios da ordem de R$ 578,46 em relação aos valores observados, enquanto o <strong>MAPE</strong> indica um erro percentual absoluto médio de aproximadamente 15,3%. A <a href="#tbl-Metricas" class="quarto-xref">Tabela&nbsp;<span>7.4</span></a> demonstra essas métricas segregadas por município:</p>
+<div id="tbl-Metricas" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-Metricas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;7.4: RMSE e MAPE por município dos Lotes 1 e 2. Elaboração própria.
+</figcaption>
+<div aria-describedby="tbl-Metricas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Município</th>
+<th style="text-align: right;">RMSE</th>
+<th style="text-align: right;">MAPE</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Manaus</td>
+<td style="text-align: right;">1901,00</td>
+<td style="text-align: right;">0,184</td>
+<td style="text-align: right;">516</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cuiabá</td>
+<td style="text-align: right;">352,00</td>
+<td style="text-align: right;">0,176</td>
+<td style="text-align: right;">349</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Curitiba</td>
+<td style="text-align: right;">474,00</td>
+<td style="text-align: right;">0,158</td>
+<td style="text-align: right;">8818</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Salvador</td>
+<td style="text-align: right;">519,00</td>
+<td style="text-align: right;">0,151</td>
+<td style="text-align: right;">212</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rio de Janeiro</td>
+<td style="text-align: right;">434,00</td>
+<td style="text-align: right;">0,142</td>
+<td style="text-align: right;">1450</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fortaleza</td>
+<td style="text-align: right;">299,00</td>
+<td style="text-align: right;">0,141</td>
+<td style="text-align: right;">503</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Belo Horizonte</td>
+<td style="text-align: right;">504,00</td>
+<td style="text-align: right;">0,131</td>
+<td style="text-align: right;">1408</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Porto Velho</td>
+<td style="text-align: right;">104,00</td>
+<td style="text-align: right;">0,129</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Campo Grande</td>
+<td style="text-align: right;">121,00</td>
+<td style="text-align: right;">0,127</td>
+<td style="text-align: right;">444</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Nota-se que embora o município com maior erro (Manaus) apresente raiz do erro quadrático médio de R$ 1901,00, em termos de erro percentual absoluto médio esse valor é inferior a 20%, cifra considerada aceitável para o fim de avaliação em massa e em sintonia com a literatura <span class="citation" data-cites="idecor2025 Oliveira2022">(<a href="references.html#ref-Oliveira2022" role="doc-biblioref">OLIVEIRA et al., 2022</a>; <a href="references.html#ref-idecor2025" role="doc-biblioref">PROVÍNCIA DE CÓRDOBA, 2025</a>)</span>.</p>
 </section>
 <section id="homogeneização" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="homogeneização"><span class="header-section-number">7.2</span> Homogeneização</h2>
@@ -294,6 +776,17 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-number="7.4" class="anchored" data-anchor-id="modelo-final"><span class="header-section-number">7.4</span> Modelo final</h2>
 
 
+<div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Oliveira2022" class="csl-entry" role="listitem">
+OLIVEIRA, A. A. F. DE; BANDEIRA, S. R. V.; SILVA, C. V. A. Estimativa de desempenho de métodos de aprendizado de máquina baseados em árvores de decisão na valoração do solo no município de Fortaleza, Brasil. <strong>Revista Valorem</strong>, v. 1, n. 1, p. 1–15, 2022. Disponível em: &lt;<a href="https://revistavalorem.com/index.php/home/article/view/8">https://revistavalorem.com/index.php/home/article/view/8</a>&gt;.
+</div>
+<div id="ref-idecor2025" class="csl-entry" role="listitem">
+PROVÍNCIA DE CÓRDOBA. Informe Estudio del mercado de la tierra urbana de la Provincia de Córdoba 2025., 2025. Córdoba: IDECOR.
+</div>
+<div id="ref-Raudenbush2002" class="csl-entry" role="listitem">
+RAUDENBUSH, A. S., S. W.; Bryk. <strong>Hierarchical Linear Models: Applications and Data Analysis Methods</strong>. 2º ed. Thousand Oaks: Sage Publications, 2002.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

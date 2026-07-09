@@ -10,7 +10,148 @@ linear generalizada, seguido de krigagem ordinária dos resíduos, resultando nu
 modelo final de regressão linear ordinária com os resíduos krigados como
 variável explicativa. Nas seções abaixo esse procedimento é detalhado.
 
-## Modelos multiníveis
+## Modelo Linear Hierárquico (MLH)
+
+Antes do ajuste dos modelos previsores foi necessário o tratamento de variáveis.
+Merece destaque o fato de que a distância ao litoral ("dist_litoral") somente
+foi calculada para municípios costeiros, possuindo valores ausentes nos demais
+contextos. Para lidar com esse inconveniente, foi incluída a variável dicotômica
+"litoraneo" (1 = município costeiro; 0 = município interiorano) e os valores
+ausentes de "dist_litoral" (todos com "litorâneo" = 0) foram substituídos por
+0.
+
+Em seguida foi ajustado um modelo linear hierárquico (MLH, pacote *lme4*)
+condicionado à verificação de multicolinearidade, a partir dos valores de
+*Variance Inflation Factor* (VIF). O MLH captura a relação entre variáveis
+explicativas (efeitos fixos) e a variável explicada, considerando a estrutura
+hierárquica dos dados por meio de efeitos aleatórios, neste trabalho definidos a
+partir de agrupamentos espaciais [@Raudenbush2002].  Foram empregados
+como níveis hierárquicos os municípios ("cd_mun"), os *clusters* de localização
+para lotes ("cluster"), e os setores censitários ("cd_setor"). A especificação
+do MLH é:
+
+```{r}
+#| label: MLH
+#| echo: true
+#| eval: false
+MLH <- lmer(log(valor_unitario) ~ log(area/450) + log(dist_cbd_m/100) + 
+              classe_declividade + log1p(dist_litoral_cond/100) + litoraneo + 
+              impermeab + log1p(d_demo_h_km2_setor) + log1p(dens_eq_saud_setor) +
+              rend_med_pct_sm_setor + sqrt(var_ren_med_setor) + ace + cen + 
+              VUM2 + log1p(altura_media_muni_500m) + ndvi_media + 
+              log1p(ndbi_media) + log1p(ui_media) + bci_media_media_setor +
+              (1 | cluster) + (1 | cd_mun) + (1 | cd_setor),
+            data = Lote8)
+```
+
+
+A definição das variáveis consta no Quadro 1.
+
+**Quadro 1.** Definição das variáveis empregadas nos modelos. Elaboração própria.
+
+| Variável                 | Definição |
+|:-------------------------|:----------|
+| *valor_unitario*         | Valor unitário do lote, obtido pela razão entre o valor absoluto registrado no anúncio e a área. |
+| *area/450*               | Área do lote homogeneizada (dividida pela área do lote padrão, estipulada em 450 m²). |
+| *dist_cbd_m/100*         | Distância ao centro principal (dividida por 100). |
+| *classe_declividade*     | Classe de declividade do terreno, variando de 1 (plano) a 6 (escarpado). |
+| *dist_litoral_cond/100*  | Distância ao litoral condicionada a municípios costeiros (dividida por 100). |
+| *litoraneo*              | Variável dicotômica para municípios costeiros. |
+| *impermeab*              | Percentagem de solo impermeabilizado no setor censitário. |
+| *d_demo_h_km2_setor*     | Densidade demográfica (hab/km²) do setor censitário. |
+| *dens_eq_saud_setor*     | Densidade de equipamentos de saúde (n/km²) do setor censitário. |
+| *rend_med_pct_sm_setor*  | Renda per capita média em salários mínimos do setor censitário |
+| *var_ren_med_setor*      | Variância da renda média do chefe do domicílio, por setor censitário. |
+| *ace*                    | Acessibilidade. |
+| *cen*                    | Centralidade.   |
+| *VUM2*                   | Valor do m² edificado, estimado a partir do modelo com imóveis edificados. |
+| *altura_media_muni_500m* | Altura média das edificações em raio de 500 m a partir da observação. |
+| *ndvi_media*             | Índice de vegetação diferenciada normalizada média em raio de 500 m a partir da observação.  |
+| *ndbi_media*             | Índice de áreas construídas por diferença normalizada em raio de 500 m a partir da observação. |
+| *ui_media*               | Índice de urbanização em raio de 500 m a partir da observação. |
+| *bci_media*              | Índice de composição biofísica em raio de 500 m a partir da observação. |
+
+Foram sucessivamente removidas as variáveis com maiores valores (para 
+$VIF \geq 10$) e coeficientes menos significativos, o que resultou na exclusão 
+de `ndbi_media` ($VIF = 145,1532;\; t = -0,809$), `rndsi_media`
+($VIF = 50,6742;\; t = 2,742$) e `ui_media` ($VIF = 191,4915;\; t = -3,014$).
+
+As. Tabelas -@tbl-MLH, -@tbl-QualFit e -@tbl-VarNiveis exibem os resultados do
+modelo definitivo empregado.
+
+
+| Efeitos fixos                 | Estimativa  | Erro-padrão   | Valor-t  | VIF    |
+|:------------------------------|------------:|--------------:|---------:|-------:|
+| Intercepto                    | 5,9880      | 0,2216        | 27,7170  |      / |
+| log(area/450)                 | -0,3116     | 0,0042        |  -73,663 | 1,0175 |
+| log(dist_cbd_m/100)           | -0,0352     | 0,0221        |  -1,5950 | 1,8089 |
+| classe_declividade            | -0,0150     | 0,0052        |  -2,8800 | 1,0314 |
+| log1p(dist_litoral_cond/100)  | -0,0466     | 0,0191        |  -2,4390 | 1,1828 |
+| litoraneo                     | 0,6687      | 0,2765        | 2,4180   | 1,0994 |
+| impermeab                     | 0,0019      | 0,0007        | 2,5980   | 2,1173 |
+| log1p(d_demo_h_km2_setor)     | -0,0438     | 0,0105        |  -4,1640 | 1,7830 |
+| log1p(dens_eq_saud_setor)     | 0,0281      | 0,0046        | 6,1670   | 1,1548 |
+| rend_med_pct_sm_setor         | 0,1601      | 0,0104        | 15,3880  | 2,4180 |
+| sqrt(var_ren_med_setor)       | -1,799e-06  | 1,062e-06     |  -1,6940 | 1,3523 |
+| ace                           | 0,1768      | 0,0563        | 3,1400   | 2,0417 |
+| cen                           | 0,2960      | 0,0371        | 7,9770.  | 1,2631 |
+| I(VUM2/4870)                  | 0,6442      | 0,0386        | 16,6790  | 1,9282 |
+| log1p(altura_media_muni_500m) | 0,3223      | 0,0354        | 9,1110   | 1,7466 |
+| ndvi_media                    | -0,6657     | 0,0809        |  -8,2310 | 1,8428 |
+| bci_media                     | 0,6146      | 0,2334        | 2,633    | 1,2803 |
+
+:  Modelo linear hierárquico para lotes das capitais dos Lotes 1 e 2. Elaboração própria. {#tbl-MLH}
+
+| Estatística                                     | Valor     |
+|:------------------------------------------------|----------:|
+| $R^2$ condicional (efeitos fixos e aleatórios)  | 0,8990    |  
+| $R^2$ marginal (efeitos fixos)                  | 0,3780    |
+| AIC                                             | 5491,5660 |
+
+: Estatísticas de qualidade de ajuste para o modelo MLH. Elaboração própria. {#tbl-QualFit}
+
+| Nível     | Var.   |
+|:----------|-------:|
+| Município | 0,1357 |
+| Cluster   | 0,0323 |
+| Setor     | 0,1050 |
+| Residual. | 0,0527 |
+
+: Variância dos efeitos aleatórios. Elaboração própria. {#tbl-VarNiveis}
+
+Foi efetuada análise dos resíduos, indicando que existe desvio da distribuição 
+teórica ($D = 0,0710; \; p < 2,2e-16$), mas ele é muito pequeno, o que é normal, 
+diante do grande número de observações. Existe dispersão de 4,61% ($p < 2,2e-16$),
+acima do esperado, porém o valor é pequeno e não preocupante. Por fim, 
+revelou-se 0,30% de outliers ($p < 2,2e-16$), cifra plausível para quase 15 mil 
+observações em nove cidades.
+
+Além do $R^2$ e do AIC, o ajuste do modelo foi avaliado por meio das métricas 
+_Raiz do Erro Quadrático Médio_ (**RMSE**) e _Erro Percentual Absoluto Médio_ 
+(**MAPE**), que apresentaram valores de 578,46 e 0,1529, respectivamente. O 
+**RMSE** indica que, em média, as estimativas apresentam desvios da ordem de 
+R\$ 578,46 em relação aos valores observados, enquanto o **MAPE** indica um erro 
+percentual absoluto médio de aproximadamente 15,3%. A @tbl-Metricas demonstra 
+essas métricas segregadas por município:
+
+| Município      | RMSE    | MAPE  | n    |
+| :--------------| -------:| ----: | ----:|
+| Manaus         | 1901,00 | 0,184 | 516  |
+| Cuiabá         | 352,00  | 0,176 | 349  |
+| Curitiba       | 474,00  | 0,158 | 8818 |
+| Salvador       | 519,00  | 0,151 | 212  |
+| Rio de Janeiro | 434,00  | 0,142 | 1450 |
+| Fortaleza      | 299,00  | 0,141 | 503  |
+| Belo Horizonte | 504,00  | 0,131 | 1408 |
+| Porto Velho    | 104,00  | 0,129 | 80   |
+| Campo Grande   | 121,00  | 0,127 | 444  |
+
+: RMSE e MAPE por município dos Lotes 1 e 2. Elaboração própria. {#tbl-Metricas}
+
+Nota-se que embora o município com maior erro (Manaus) apresente raiz do erro 
+quadrático médio de R\$ 1901,00, em termos de erro percentual absoluto médio esse
+valor é inferior a 20%, cifra considerada aceitável para o fim de avaliação em 
+massa e em sintonia com a literatura [@idecor2025; @Oliveira2022].
 
 
 ## Homogeneização 
