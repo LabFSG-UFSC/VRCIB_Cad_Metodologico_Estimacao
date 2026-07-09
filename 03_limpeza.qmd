@@ -1,4 +1,11 @@
-# Limpeza dos dados
+---
+# title: "Limpeza de dados"
+author: 
+  - "Luiz Fernando Palin Droubi"
+  - "Vinícius Lohn da Silva"
+---
+
+# Limpeza de dados {#sec-limpeza}
 
 A Etapa de Modelagem e Avaliações em Massa é iniciada com a limpeza dos dados
 oriundos do Observatório do Mercado Imobiliário. Neste capítulo saõ apresentados

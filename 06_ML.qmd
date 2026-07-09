@@ -1,3 +1,9 @@
-# Análise de dados com modelos de aprendizado de máquina
+---
+title: "Análise de dados com modelos de aprendizado de máquina"
+author: 
+  - "Caroline Bernardo Silva"
+---
+
+# 
 
 (CAROL)

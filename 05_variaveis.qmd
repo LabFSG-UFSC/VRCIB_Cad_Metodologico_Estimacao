@@ -1,4 +1,10 @@
-# Geração de variáveis explicativas
+---
+title: "Geração de variáveis explicativas"
+author: 
+  - "Luiz Fernando Palin Droubi"
+  - "Ramon Lucato de Aguilar"
+  - "Vile Rodrigues"
+---
 
 Além da variável `PC` (*Padrão Construtivo*), obtida através de algoritmos de
 *clusterização*, conforme @sec-cluster, outras variáveis explicativas foram
@@ -8,7 +14,154 @@ como a variável `RPCSMK` (*Renda per papita, em salários mínimos, krigada*) e
 
 ## Renda Krigada
 
-(VILE)
+O processo de krigagem dos Lotes 1 e 2 teve como objetivo gerar superfícies 
+interpoladas de renda média atribida aos setores censitários para os municípios 
+selecionados e associar os valores estimados dessas superfícies aos pontos dos 
+imóveis/anúncios OMI.
+
+A krigagem foi realizada a partir da variável geográfica `renda_med_pct`, 
+descrita como `Renda média do familiar responsável pelo domicílio (por setor)`, 
+posteriormente transformada em escala logarítmica para favorecer o ajuste 
+geoestatístico. Após a geração das superfícies krigadas raster em GeoTIFF, os 
+valores interpolados foram extraídos para os pontos dos imóveis, compondo o 
+resultado consolidado `dna_estimacao_consolidado_renda_krigada` com a coluna 
+final `renda_krigada_ln`.
+
+O escopo final da consolidação considerou 8 municípios:
+
+* Lote 1: `belo_horizonte`, `campo_grande`, `fortaleza`, `porto_velho`.
+* Lote 2: `cuiaba`, `curitiba`, `manaus`, `salvador`.
+
+### Metodologia
+
+O processo metodológico combinou etapas de preparação da base, ajuste 
+geoestatístico, interpolação por krigagem ordinária local e extração dos valores
+interpolados para os pontos dos imóveis/anúncios OMI.
+
+Foram utilizados os seguintes softwares e ferramentas:
+
+* QGIS 3.44.10;
+* plugin Smart-Map no QGIS;
+* SAGA GIS 2.1.2.
+
+O ajuste dos semivariogramas foi realizado no Smart-Map, no ambiente do QGIS 
+3.44.10. A interpolação foi executada no SAGA GIS 2.1.2, com inserção manual dos
+parâmetros previamente ajustados, sem reajuste do variograma no SAGA.
+
+2.1. Base de entrada e preparação da variável
+
+Em cada município, a estrutura geral de trabalho foi organizada nas seguintes 
+pastas:
+
+* `entrada`: camada dos centróides dos setores censitários dos municípios;
+* `pontos_anuncios_OMI`: camada de pontos dos dados de imóveis do OMI;
+* `projeto`: arquivos do QGIS, Smart-Map, centroides, buffer e projeto SAGA;
+* `parametros`: imagens e registros auxiliares dos parâmetros usados no ajuste do semivariograma;
+* `saida`: arquivos finais, incluindo os GeoTIFF das superfícies krigadas raster e as camadas vetoriais com a coluna resultante `renda_krigada_ln`, posteriormente consolidadas em `dna_estimacao_consolidado_renda_krigada`.
+
+A base pontual utilizada no ajuste geoestatístico foi a camada de centroides dos
+setores censitários previamente disponível no acervo do projeto. Portanto, os
+centroides não foram gerados nesta etapa; eles foram utilizados como insumo já
+existente.
+
+A preparação da base incluiu:
+
+1. seleção da variável geográfica `renda_med_pct` (`Renda média do familiar responsável pelo domicílio (por setor)`);
+2. limpeza da base;
+3. remoção de outliers;
+4. remoção de valores nulos, iguais a zero ou negativos;
+5. transformação logarítmica dos valores válidos de `renda_med_pct`.
+
+A logaritmização foi aplicada para reduzir a assimetria da distribuição dos
+valores de `renda_med_pct` e favorecer melhor ajuste do semivariograma. Assim, a
+krigagem foi realizada sobre a variável logaritmizada, e não diretamente sobre
+os valores brutos de renda média.
+
+### Construção da área de interpolação
+
+Com a base limpa e logaritmizada, foi utilizado o conjunto de pontos válidos dos
+centroides dos setores censitários.
+
+A partir desses pontos, foi construído um envoltório convexo. Em seguida, foi 
+gerado um buffer de `1.500 metros` ao redor desse envoltório.
+
+Esse buffer foi utilizado como máscara espacial para recortar a superfície 
+krigada, delimitando a área de interpolação e evitando extrapolações excessivas 
+para regiões afastadas da distribuição dos pontos de entrada.
+
+As superfícies krigadas raster resultantes da krigagem foram exportadas no SAGA 
+GIS em formato GeoTIFF. Esses arquivos serviram como base para o recorte 
+espacial e para a extração posterior dos valores interpolados para os pontos dos
+imóveis/anúncios OMI.
+
+### Ajuste do semivariograma
+
+O ajuste dos semivariogramas foi realizado no plugin Smart-Map, no QGIS.
+
+Os parâmetros finais de cada município foram registrados na tabela oficial:
+
+`documentacao_variogramas_krigagem\01_tabela_parametros\tabela_parametros_krigagem_final.csv`
+
+Também foram preservados arquivos de imagem dos semivariogramas nas pastas 
+municipais de `Lote_1` e `Lote_2`, especialmente nos diretórios `parametros`, 
+que foram utilizados como evidência visual neste relatório.
+
+Os parâmetros principais registrados foram:
+
+* modelo de semivariograma;
+* efeito pepita;
+* patamar;
+* alcance;
+* distância máxima;
+* lag.
+
+### Execução da krigagem no SAGA GIS
+
+Após o ajuste no Smart-Map, os parâmetros do semivariograma foram inseridos 
+manualmente no SAGA GIS 2.1.2.
+
+A interpolação foi realizada por krigagem ordinária local.
+
+A sequência operacional foi:
+
+1. preparação da base de setores censitários e definição da variável geográfica `renda_med_pct`;
+2. limpeza da base, com remoção de outliers;
+3. remoção de valores nulos, iguais a zero ou negativos;
+4. logaritmização dos valores válidos de `renda_med_pct`;
+5. uso da camada de centroides dos setores censitários previamente disponível;
+6. criação do envoltório convexo dos pontos válidos;
+7. geração de buffer de `1.500 metros`;
+8. ajuste do semivariograma no Smart-Map/QGIS;
+9. inserção manual dos parâmetros no SAGA GIS 2.1.2;
+10. execução da krigagem ordinária local;
+11. exportação da superfície krigada raster em formato GeoTIFF no SAGA GIS;
+12. recorte da superfície krigada raster pela máscara espacial do buffer;
+13. extração dos valores da superfície krigada raster para os pontos dos imóveis/anúncios OMI;
+14. criação da coluna `renda_krigada_ln` na base de imóveis;
+15. integração do resultado final às camadas municipais em `saida`.
+
+### Extração dos valores krigados para os imóveis
+
+A superfície krigada raster não foi utilizada apenas como produto de
+interpolação. As superfícies krigadas raster foram exportadas pelo SAGA GIS em
+formato GeoTIFF antes das etapas de recorte e integração com a base de imóveis.
+
+Após sua geração e recorte pelo buffer, os valores interpolados foram associados
+espacialmente aos pontos da base de imóveis/anúncios OMI. Para cada imóvel, foi
+extraído o valor da célula ou posição correspondente da superfície krigada
+raster.
+
+Esse valor foi incorporado à base final como a coluna:
+
+`renda_krigada_ln`
+
+A coluna foi mantida em escala logarítmica. Portanto, o produto final não
+corresponde à renda em escala original, mas ao valor interpolado de
+`renda_med_pct` após logaritmização.
+
+Essa etapa permitiu transformar a superfície interpolada em um atributo tabular
+associado a cada imóvel, viabilizando análises posteriores que relacionem os
+anúncios OMI aos valores estimados de renda no entorno de sua localização.
 
 ## Valor Unitário do metro quadrado edificado {#sec-VUM2}
 

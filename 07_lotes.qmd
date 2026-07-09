@@ -1,4 +1,9 @@
-# Análise de dados de lotes urbanos
+---
+title: "Análise de dados de lotes urbanos"
+author: 
+  - "Ramon Lucato de Aguilar"
+  - "Luiz Fernando Palin Droubi"
+---
 
 Os dados de lotes urbanos foram analisados a partir de modelos de regressão
 linear generalizada, seguido de krigagem ordinária dos resíduos, resultando num

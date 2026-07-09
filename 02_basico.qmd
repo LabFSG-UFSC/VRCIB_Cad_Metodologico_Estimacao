@@ -1,3 +1,10 @@
+---
+# title: "Metodologia Geral"
+author: 
+  - "Everton da Silva"
+  - "Luiz Fernando Palin Droubi"
+---
+
 # Metodologia Geral {#sec-metodo}
 
 Para o projeto do Valor de Referência (VR) do Cadastro Imobiliário Brasileiro 

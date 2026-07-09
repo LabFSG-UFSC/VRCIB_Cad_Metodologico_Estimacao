@@ -1,3 +1,11 @@
+---
+# title: "Métodos de classificação"
+author: 
+  - "Luiz Fernando Palin Droubi"
+  - "Vinícius Lohn da Silva"
+  - "Caroline Bernardo Silva"
+---
+
 # Métodos de classificação {#sec-cluster}
 
 Para este projeto foram utilizados métodos robustos de classificação 

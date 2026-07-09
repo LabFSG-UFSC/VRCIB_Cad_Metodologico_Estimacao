@@ -6,6 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Luiz Fernando Palin Droubi">
+<meta name="author" content="Ramon Lucato de Aguilar">
+<meta name="author" content="Vile Rodrigues">
 
 <title>5&nbsp; Geração de variáveis explicativas – Caderno Metodológico</title>
 <style>
@@ -219,7 +222,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03_limpeza.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Limpeza dos dados</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Limpeza de dados</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -291,7 +294,14 @@ window.Quarto = {
     <h2 id="toc-title">Índice</h2>
    
   <ul>
-  <li><a href="#renda-krigada" id="toc-renda-krigada" class="nav-link active" data-scroll-target="#renda-krigada"><span class="header-section-number">5.1</span> Renda Krigada</a></li>
+  <li><a href="#renda-krigada" id="toc-renda-krigada" class="nav-link active" data-scroll-target="#renda-krigada"><span class="header-section-number">5.1</span> Renda Krigada</a>
+  <ul>
+  <li><a href="#metodologia" id="toc-metodologia" class="nav-link" data-scroll-target="#metodologia"><span class="header-section-number">5.1.1</span> Metodologia</a></li>
+  <li><a href="#construção-da-área-de-interpolação" id="toc-construção-da-área-de-interpolação" class="nav-link" data-scroll-target="#construção-da-área-de-interpolação"><span class="header-section-number">5.1.2</span> Construção da área de interpolação</a></li>
+  <li><a href="#ajuste-do-semivariograma" id="toc-ajuste-do-semivariograma" class="nav-link" data-scroll-target="#ajuste-do-semivariograma"><span class="header-section-number">5.1.3</span> Ajuste do semivariograma</a></li>
+  <li><a href="#execução-da-krigagem-no-saga-gis" id="toc-execução-da-krigagem-no-saga-gis" class="nav-link" data-scroll-target="#execução-da-krigagem-no-saga-gis"><span class="header-section-number">5.1.4</span> Execução da krigagem no SAGA GIS</a></li>
+  <li><a href="#extração-dos-valores-krigados-para-os-imóveis" id="toc-extração-dos-valores-krigados-para-os-imóveis" class="nav-link" data-scroll-target="#extração-dos-valores-krigados-para-os-imóveis"><span class="header-section-number">5.1.5</span> Extração dos valores krigados para os imóveis</a></li>
+  </ul></li>
   <li><a href="#sec-VUM2" id="toc-sec-VUM2" class="nav-link" data-scroll-target="#sec-VUM2"><span class="header-section-number">5.2</span> Valor Unitário do metro quadrado edificado</a>
   <ul>
   <li><a href="#modelo-linear" id="toc-modelo-linear" class="nav-link" data-scroll-target="#modelo-linear"><span class="header-section-number">5.2.1</span> Modelo Linear</a></li>
@@ -313,6 +323,14 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Autores</div>
+    <div class="quarto-title-meta-contents">
+             <p>Luiz Fernando Palin Droubi </p>
+             <p>Ramon Lucato de Aguilar </p>
+             <p>Vile Rodrigues </p>
+          </div>
+  </div>
     
   
     
@@ -326,7 +344,98 @@ window.Quarto = {
 <p>Além da variável <code>PC</code> (<em>Padrão Construtivo</em>), obtida através de algoritmos de <em>clusterização</em>, conforme <a href="04_classificacao.html" class="quarto-xref"><span>Capítulo 4</span></a>, outras variáveis explicativas foram criadas visando a obtenção de um melhor ajuste para os modelos estatísticos, como a variável <code>RPCSMK</code> (<em>Renda per papita, em salários mínimos, krigada</em>) e <code>VUM2</code> (<em>Valor Unitário do metro quadrado edificado</em>).</p>
 <section id="renda-krigada" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="renda-krigada"><span class="header-section-number">5.1</span> Renda Krigada</h2>
-<p>(VILE)</p>
+<p>O processo de krigagem dos Lotes 1 e 2 teve como objetivo gerar superfícies interpoladas de renda média atribida aos setores censitários para os municípios selecionados e associar os valores estimados dessas superfícies aos pontos dos imóveis/anúncios OMI.</p>
+<p>A krigagem foi realizada a partir da variável geográfica <code>renda_med_pct</code>, descrita como <code>Renda média do familiar responsável pelo domicílio (por setor)</code>, posteriormente transformada em escala logarítmica para favorecer o ajuste geoestatístico. Após a geração das superfícies krigadas raster em GeoTIFF, os valores interpolados foram extraídos para os pontos dos imóveis, compondo o resultado consolidado <code>dna_estimacao_consolidado_renda_krigada</code> com a coluna final <code>renda_krigada_ln</code>.</p>
+<p>O escopo final da consolidação considerou 8 municípios:</p>
+<ul>
+<li>Lote 1: <code>belo_horizonte</code>, <code>campo_grande</code>, <code>fortaleza</code>, <code>porto_velho</code>.</li>
+<li>Lote 2: <code>cuiaba</code>, <code>curitiba</code>, <code>manaus</code>, <code>salvador</code>.</li>
+</ul>
+<section id="metodologia" class="level3" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="metodologia"><span class="header-section-number">5.1.1</span> Metodologia</h3>
+<p>O processo metodológico combinou etapas de preparação da base, ajuste geoestatístico, interpolação por krigagem ordinária local e extração dos valores interpolados para os pontos dos imóveis/anúncios OMI.</p>
+<p>Foram utilizados os seguintes softwares e ferramentas:</p>
+<ul>
+<li>QGIS 3.44.10;</li>
+<li>plugin Smart-Map no QGIS;</li>
+<li>SAGA GIS 2.1.2.</li>
+</ul>
+<p>O ajuste dos semivariogramas foi realizado no Smart-Map, no ambiente do QGIS 3.44.10. A interpolação foi executada no SAGA GIS 2.1.2, com inserção manual dos parâmetros previamente ajustados, sem reajuste do variograma no SAGA.</p>
+<p>2.1. Base de entrada e preparação da variável</p>
+<p>Em cada município, a estrutura geral de trabalho foi organizada nas seguintes pastas:</p>
+<ul>
+<li><code>entrada</code>: camada dos centróides dos setores censitários dos municípios;</li>
+<li><code>pontos_anuncios_OMI</code>: camada de pontos dos dados de imóveis do OMI;</li>
+<li><code>projeto</code>: arquivos do QGIS, Smart-Map, centroides, buffer e projeto SAGA;</li>
+<li><code>parametros</code>: imagens e registros auxiliares dos parâmetros usados no ajuste do semivariograma;</li>
+<li><code>saida</code>: arquivos finais, incluindo os GeoTIFF das superfícies krigadas raster e as camadas vetoriais com a coluna resultante <code>renda_krigada_ln</code>, posteriormente consolidadas em <code>dna_estimacao_consolidado_renda_krigada</code>.</li>
+</ul>
+<p>A base pontual utilizada no ajuste geoestatístico foi a camada de centroides dos setores censitários previamente disponível no acervo do projeto. Portanto, os centroides não foram gerados nesta etapa; eles foram utilizados como insumo já existente.</p>
+<p>A preparação da base incluiu:</p>
+<ol type="1">
+<li>seleção da variável geográfica <code>renda_med_pct</code> (<code>Renda média do familiar responsável pelo domicílio (por setor)</code>);</li>
+<li>limpeza da base;</li>
+<li>remoção de outliers;</li>
+<li>remoção de valores nulos, iguais a zero ou negativos;</li>
+<li>transformação logarítmica dos valores válidos de <code>renda_med_pct</code>.</li>
+</ol>
+<p>A logaritmização foi aplicada para reduzir a assimetria da distribuição dos valores de <code>renda_med_pct</code> e favorecer melhor ajuste do semivariograma. Assim, a krigagem foi realizada sobre a variável logaritmizada, e não diretamente sobre os valores brutos de renda média.</p>
+</section>
+<section id="construção-da-área-de-interpolação" class="level3" data-number="5.1.2">
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="construção-da-área-de-interpolação"><span class="header-section-number">5.1.2</span> Construção da área de interpolação</h3>
+<p>Com a base limpa e logaritmizada, foi utilizado o conjunto de pontos válidos dos centroides dos setores censitários.</p>
+<p>A partir desses pontos, foi construído um envoltório convexo. Em seguida, foi gerado um buffer de <code>1.500 metros</code> ao redor desse envoltório.</p>
+<p>Esse buffer foi utilizado como máscara espacial para recortar a superfície krigada, delimitando a área de interpolação e evitando extrapolações excessivas para regiões afastadas da distribuição dos pontos de entrada.</p>
+<p>As superfícies krigadas raster resultantes da krigagem foram exportadas no SAGA GIS em formato GeoTIFF. Esses arquivos serviram como base para o recorte espacial e para a extração posterior dos valores interpolados para os pontos dos imóveis/anúncios OMI.</p>
+</section>
+<section id="ajuste-do-semivariograma" class="level3" data-number="5.1.3">
+<h3 data-number="5.1.3" class="anchored" data-anchor-id="ajuste-do-semivariograma"><span class="header-section-number">5.1.3</span> Ajuste do semivariograma</h3>
+<p>O ajuste dos semivariogramas foi realizado no plugin Smart-Map, no QGIS.</p>
+<p>Os parâmetros finais de cada município foram registrados na tabela oficial:</p>
+<p><code>documentacao_variogramas_krigagem\01_tabela_parametros\tabela_parametros_krigagem_final.csv</code></p>
+<p>Também foram preservados arquivos de imagem dos semivariogramas nas pastas municipais de <code>Lote_1</code> e <code>Lote_2</code>, especialmente nos diretórios <code>parametros</code>, que foram utilizados como evidência visual neste relatório.</p>
+<p>Os parâmetros principais registrados foram:</p>
+<ul>
+<li>modelo de semivariograma;</li>
+<li>efeito pepita;</li>
+<li>patamar;</li>
+<li>alcance;</li>
+<li>distância máxima;</li>
+<li>lag.</li>
+</ul>
+</section>
+<section id="execução-da-krigagem-no-saga-gis" class="level3" data-number="5.1.4">
+<h3 data-number="5.1.4" class="anchored" data-anchor-id="execução-da-krigagem-no-saga-gis"><span class="header-section-number">5.1.4</span> Execução da krigagem no SAGA GIS</h3>
+<p>Após o ajuste no Smart-Map, os parâmetros do semivariograma foram inseridos manualmente no SAGA GIS 2.1.2.</p>
+<p>A interpolação foi realizada por krigagem ordinária local.</p>
+<p>A sequência operacional foi:</p>
+<ol type="1">
+<li>preparação da base de setores censitários e definição da variável geográfica <code>renda_med_pct</code>;</li>
+<li>limpeza da base, com remoção de outliers;</li>
+<li>remoção de valores nulos, iguais a zero ou negativos;</li>
+<li>logaritmização dos valores válidos de <code>renda_med_pct</code>;</li>
+<li>uso da camada de centroides dos setores censitários previamente disponível;</li>
+<li>criação do envoltório convexo dos pontos válidos;</li>
+<li>geração de buffer de <code>1.500 metros</code>;</li>
+<li>ajuste do semivariograma no Smart-Map/QGIS;</li>
+<li>inserção manual dos parâmetros no SAGA GIS 2.1.2;</li>
+<li>execução da krigagem ordinária local;</li>
+<li>exportação da superfície krigada raster em formato GeoTIFF no SAGA GIS;</li>
+<li>recorte da superfície krigada raster pela máscara espacial do buffer;</li>
+<li>extração dos valores da superfície krigada raster para os pontos dos imóveis/anúncios OMI;</li>
+<li>criação da coluna <code>renda_krigada_ln</code> na base de imóveis;</li>
+<li>integração do resultado final às camadas municipais em <code>saida</code>.</li>
+</ol>
+</section>
+<section id="extração-dos-valores-krigados-para-os-imóveis" class="level3" data-number="5.1.5">
+<h3 data-number="5.1.5" class="anchored" data-anchor-id="extração-dos-valores-krigados-para-os-imóveis"><span class="header-section-number">5.1.5</span> Extração dos valores krigados para os imóveis</h3>
+<p>A superfície krigada raster não foi utilizada apenas como produto de interpolação. As superfícies krigadas raster foram exportadas pelo SAGA GIS em formato GeoTIFF antes das etapas de recorte e integração com a base de imóveis.</p>
+<p>Após sua geração e recorte pelo buffer, os valores interpolados foram associados espacialmente aos pontos da base de imóveis/anúncios OMI. Para cada imóvel, foi extraído o valor da célula ou posição correspondente da superfície krigada raster.</p>
+<p>Esse valor foi incorporado à base final como a coluna:</p>
+<p><code>renda_krigada_ln</code></p>
+<p>A coluna foi mantida em escala logarítmica. Portanto, o produto final não corresponde à renda em escala original, mas ao valor interpolado de <code>renda_med_pct</code> após logaritmização.</p>
+<p>Essa etapa permitiu transformar a superfície interpolada em um atributo tabular associado a cada imóvel, viabilizando análises posteriores que relacionem os anúncios OMI aos valores estimados de renda no entorno de sua localização.</p>
+</section>
 </section>
 <section id="sec-VUM2" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="sec-VUM2"><span class="header-section-number">5.2</span> Valor Unitário do metro quadrado edificado</h2>
