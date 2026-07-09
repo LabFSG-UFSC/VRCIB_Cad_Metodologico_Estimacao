@@ -415,9 +415,7 @@ multiplicativos, pois, deste modelo, deduz-se:
 $$F_1 = \exp(\hat \beta_1 x_1); F_2 = \exp(\hat \beta_2 x_2); \ldots ; F_k =  \exp(\hat\beta_kx_k)$$
 :::
 
-## Capital Sociespacial
-
-### Clusters de localização
+## Clusters de localização
 
 Tendo em vista a heterogeneidade espacial dos dados, em adição aos níveis 
 espaciais "Distritos"" e "Setores censitários"", foram gerados *clusters* 
@@ -479,7 +477,7 @@ A @tbl-clusters identifica o número de clusters gerado por tipologia e municíp
 
 : Número de clusters gerado por tipologia e município. Elaboração própria. {#tbl-clusters}
 
-### Variáveis de localização – Acessibilidade e Centralidade
+## Variáveis de localização – Acessibilidade e Centralidade
 
 Em complemento às variáveis de localização procedentes do grupo de trabalho 
 "Cartografia e variáveis", foram geradas as variáveis de localização 
@@ -496,7 +494,7 @@ vez que a geração de espaços mais ou menos acessíveis ou centrais está liga
 facilitação ou obstrução de interações entre indivíduos e a seu acesso aos 
 benefícios e oportunidades urbanas @Batty.
 
-#### Acessibilidade (Ace)
+### Acessibilidade (Ace)
 
 A acessibilidade refere-se à proximidade ou facilidade de acesso de uma 
 localização em relação ao conjunto de localizações urbanas @Hansen1959, 
@@ -518,7 +516,7 @@ residente no trecho, presumindo-se que localizações são mais acessíveis não
 apenas pela configuração geométrica da rede, mas também na proporção em que são
 potenciais focos de origem ou destino de indivíduos.
 
-#### Centralidade (Cen)
+### Centralidade (Cen)
 
 A centralidade mensura a capacidade de intermediação, verificando a recorrência
 com que um trecho viário pertence ao caminho mínimo entre todos os pares de
