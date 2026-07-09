@@ -140,16 +140,6 @@
     ]
   },
   {
-    "objectID": "06_ML.html",
-    "href": "06_ML.html",
-    "title": "6  Análise de dados com modelos de aprendizado de máquina",
-    "section": "",
-    "text": "7 \n(CAROL)",
-    "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Análise de dados com modelos de aprendizado de máquina</span>"
-    ]
-  },
-  {
     "objectID": "07_lotes.html",
     "href": "07_lotes.html",
     "title": "7  Análise de dados de lotes urbanos",
@@ -187,6 +177,16 @@
     "text": "7.4 Modelo final",
     "crumbs": [
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+    ]
+  },
+  {
+    "objectID": "08_equacoes.html",
+    "href": "08_equacoes.html",
+    "title": "8  Equações de Estimação",
+    "section": "",
+    "text": "9 Equações de Estimação",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Equações de Estimação</span>"
     ]
   },
   {

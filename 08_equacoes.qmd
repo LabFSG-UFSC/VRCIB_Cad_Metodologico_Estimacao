@@ -1,1 +1,8 @@
-# Equações de Estimação
+---
+title: "Equações de Estimação"
+author: 
+  - "Carlos Alberto Peruzzo Trivelloni"
+  - "Luiz Fernando Palin Droubi"
+---
+
+# Equações de Estimação {#sec-eq}
