@@ -7,7 +7,7 @@ author:
 ---
 
 Além da variável `PC` (*Padrão Construtivo*), obtida através de algoritmos de
-*clusterização*, conforme @sec-cluster, outras variáveis explicativas foram
+*clusterização*, conforme capítulo anterior, outras variáveis explicativas foram
 criadas visando a obtenção de um melhor ajuste para os modelos estatísticos,
 como a variável `RPCSMK` (*Renda per papita, em salários mínimos, krigada*) e
 `VUM2` (*Valor Unitário do metro quadrado edificado*).
@@ -163,11 +163,170 @@ Essa etapa permitiu transformar a superfície interpolada em um atributo tabular
 associado a cada imóvel, viabilizando análises posteriores que relacionem os
 anúncios OMI aos valores estimados de renda no entorno de sua localização.
 
+2.6. Validação
+
+Foram realizadas validações visuais das superfícies krigadas por meio da sobreposição das superfícies geradas sobre imagens de satélite dos municípios.
+
+Essa validação teve caráter exploratório e permitiu avaliar a coerência espacial geral dos resultados interpolados em relação à configuração territorial observada visualmente.
+
+Além da validação visual, também foi utilizado o cálculo da significância como procedimento de validação dos ajustes realizados, em conjunto com os demais parâmetros documentados dos semivariogramas. A significância foi definida pela razão entre o efeito pepita e o patamar do ajuste. Considerou-se aceitável a significância no intervalo de `0,15` a `0,30`, buscando-se manter esse valor o mais próximo possível de `0,15`.
+
+### Resultados
+
+O processo resultou em superfícies krigadas raster em GeoTIFF para os municípios selecionados dos Lotes 1 e 2 e em camadas municipais de imóveis/anúncios OMI com a renda krigada incorporada como atributo.
+
+Os três produtos principais foram:
+
+1. superfície krigada raster de renda exportada em GeoTIFF;
+2. superfície krigada raster recortada pelo buffer;
+3. base de imóveis/anúncios OMI com a coluna `renda_krigada_ln`, consolidada em `dna_estimacao_consolidado_renda_krigada`.
+
+#### Parâmetros finais dos semivariogramas
+
+| Município      | Lote | Modelo      | Efeito pepita (C0) | Patamar (C0+C) | Alcance  | Distância máxima | Lag     |
+| -------------- | ---: | ----------- | -----------------: | -------------: | -------: | ---------------: | ------: |
+| belo_horizonte |    1 | esférico    |              0.113 |          0.556 | 4278.831 |             6000 | 250     |
+| campo_grande   |    1 | gaussiano   |              0.085 |          0.366 | 5832.829 |             6000 | 400     |
+| fortaleza      |    1 | exponencial |              0.109 |          0.419 | 5716.310 |             6000 | 250     |
+| porto_velho    |    1 | esférico    |              0.059 |          0.285 | 4324.974 |             4500 | 371.389 |
+| cuiaba         |    2 | exponencial |              0.072 |          0.479 | 5555.004 |             7200 | 400     |
+| curitiba       |    2 | gaussiano   |              0.116 |          0.482 | 8896.143 |             9000 | 250.748 |
+| manaus         |    2 | exponencial |              0.073 |          0.467 | 6587.048 |             8000 | 229.627 |
+| salvador       |    2 | exponencial |              0.092 |          0.475 | 3926.684 |             5500 | 161.020 |
+
+Fonte: `documentacao_variogramas_krigagem\01_tabela_parametros\tabela_parametros_krigagem_final.csv`.
+
+#### Ajustes dos semivariogramas
+
+Além da tabela de parâmetros finais, foram inseridos no relatório os prints dos semivariogramas ajustados no Smart-Map/QGIS. Essas imagens funcionam como evidência visual complementar dos modelos adotados e permitem conferir graficamente os ajustes realizados antes da inserção manual dos parâmetros no SAGA GIS 2.1.2.
+
+##### Belo Horizonte
+
+Modelo adotado: esférico.  
+Efeito pepita (C0): 0.113.  
+Patamar (C0+C): 0.556.  
+Alcance: 4278.831 m.  
+Distância máxima: 6000 m.  
+Lag: 250 m.
+
+![Semivariograma ajustado — Belo Horizonte](img/semivariogramas/belo_horizonte_semivariograma.png)
+
+![Layout da superfície krigada — Belo Horizonte](img/layouts/belo_horizonte_layout.png)
+
+##### Campo Grande
+
+Modelo adotado: gaussiano.  
+Efeito pepita (C0): 0.085.  
+Patamar (C0+C): 0.366.  
+Alcance: 5832.829 m.  
+Distância máxima: 6000 m.  
+Lag: 400 m.
+
+![Semivariograma ajustado — Campo Grande](img/semivariogramas/campo_grande_semivariograma.png)
+
+![Layout da superfície krigada — Campo Grande](img/layouts/campo_grande_layout.png)
+
+##### Fortaleza
+
+Modelo adotado: exponencial.  
+Efeito pepita (C0): 0.109.  
+Patamar (C0+C): 0.419.  
+Alcance: 5716.310 m.  
+Distância máxima: 6000 m.  
+Lag: 250 m.
+
+![Semivariograma ajustado — Fortaleza](img/semivariogramas/fortaleza_semivariograma.png)
+
+![Layout da superfície krigada — Fortaleza](img/layouts/fortaleza_layout.png)
+
+##### Porto Velho
+
+Modelo adotado: esférico.  
+Efeito pepita (C0): 0.059.  
+Patamar (C0+C): 0.285.  
+Alcance: 4324.974 m.  
+Distância máxima: 4500 m.  
+Lag: 371.389 m.
+
+![Semivariograma ajustado — Porto Velho](img/semivariogramas/porto_velho_semivariograma.png)
+
+![Layout da superfície krigada — Porto Velho](img/layouts/porto_velho_layout.png)
+
+##### Cuiabá
+
+Modelo adotado: exponencial.  
+Efeito pepita (C0): 0.072.  
+Patamar (C0+C): 0.479.  
+Alcance: 5555.004 m.  
+Distância máxima: 7200 m.  
+Lag: 400 m.
+
+![Semivariograma ajustado — Cuiabá](img/semivariogramas/cuiaba_semivariograma.png)
+
+![Layout da superfície krigada — Cuiabá](img/layouts/cuiaba_layout.png)
+
+##### Curitiba
+
+Modelo adotado: gaussiano.  
+Efeito pepita (C0): 0.116.  
+Patamar (C0+C): 0.482.  
+Alcance: 8896.143 m.  
+Distância máxima: 9000 m.  
+Lag: 250.748 m.
+
+![Semivariograma ajustado — Curitiba](img/semivariogramas/curitiba_semivariograma.png)
+
+![Layout da superfície krigada — Curitiba](img/layouts/curitiba_layout.png)
+
+##### Manaus
+
+Modelo adotado: exponencial.  
+Efeito pepita (C0): 0.073.  
+Patamar (C0+C): 0.467.  
+Alcance: 6587.048 m.  
+Distância máxima: 8000 m.  
+Lag: 229.627 m.
+
+![Semivariograma ajustado — Manaus](img/semivariogramas/manaus_semivariograma.png)
+
+![Layout da superfície krigada — Manaus](img/layouts/manaus_layout.png)
+
+##### Salvador
+
+Modelo adotado: exponencial.  
+Efeito pepita (C0): 0.092.  
+Patamar (C0+C): 0.475.  
+Alcance: 3926.684 m.  
+Distância máxima: 5500 m.  
+Lag: 161.020 m.
+
+![Semivariograma ajustado — Salvador](img/semivariogramas/salvador_semivariograma.png)
+
+![Layout da superfície krigada — Salvador](img/layouts/salvador_layout.png)
+
+### Síntese dos resultados
+
+O produto final efetivo do processo corresponde às bases municipais de
+imóveis/anúncios OMI com uma nova coluna de renda krigada, denominada
+`renda_krigada_ln`, em escala logarítmica, consolidada em
+`dna_estimacao_consolidado_renda_krigada`.
+
+Essa coluna foi obtida a partir da extração dos valores das superfícies krigadas
+raster geradas por krigagem ordinária local e exportadas em GeoTIFF no SAGA GIS.
+As superfícies foram ajustadas a partir dos centroides dos setores censitários,
+com base na variável geográfica `renda_med_pct`, previamente limpa e
+logaritmizada.
+
+As superfícies krigadas foram recortadas pelo buffer de `1.500 metros`
+construído ao redor do envoltório convexo dos pontos válidos e avaliadas
+visualmente por sobreposição a imagens de satélite dos municípios.
+
+
 ## Valor Unitário do metro quadrado edificado {#sec-VUM2}
 
-Conforme já explicitado no @sec-metodo,o método adotado neste projeto para a 
-avaliação em massa dos imóveis é o **método evolutivo**. Assim, neste projeto,
-os dados coletados de imóveis edificados são utilizados de maneira secundária 
+Conforme já explicitado no segundo capítulo, o método adotado neste projeto para
+a avaliação em massa dos imóveis é o **método evolutivo**. Assim, neste projeto,
+os dados coletados de imóveis edificados são utilizados de maneira secundária
 (ou auxiliar), de maneira que ajudem a explicar o fenômeno da *localização*.
 
 ### Modelo Linear

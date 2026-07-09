@@ -1,11 +1,9 @@
 ---
-# title: "Limpeza de dados"
+title: "Limpeza de dados"
 author: 
   - "Luiz Fernando Palin Droubi"
   - "Vinícius Lohn da Silva"
 ---
-
-# Limpeza de dados {#sec-limpeza}
 
 A Etapa de Modelagem e Avaliações em Massa é iniciada com a limpeza dos dados
 oriundos do Observatório do Mercado Imobiliário. Neste capítulo saõ apresentados
@@ -27,7 +25,7 @@ graficamente o critério do *boxplot* para identificação de *outliers*:
 ```{r}
 #| label: fig-boxplot
 #| fig-cap: "Boxplot."
-knitr::include_graphics("./img/03-est/boxplot.png")
+knitr::include_graphics("./img/boxplot.png")
 ```
 
 

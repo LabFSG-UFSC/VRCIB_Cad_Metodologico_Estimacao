@@ -1,12 +1,10 @@
 ---
-# title: "Métodos de classificação"
+title: "Métodos de classificação"
 author: 
   - "Luiz Fernando Palin Droubi"
   - "Vinícius Lohn da Silva"
   - "Caroline Bernardo Silva"
 ---
-
-# Métodos de classificação {#sec-cluster}
 
 Para este projeto foram utilizados métodos robustos de classificação 
 (ou *clusterização*). Assim como no caso da regressão robusta, é mais fácil 
@@ -36,7 +34,7 @@ dos mínimos quadrados ordinários, este método é muito sensível à presença
 em estimar as k-médias, porém, na presença de *outliers* (@fig-kmeans (B)), os 
 resultados ficam comprometidos.
 
-![Problema com *K-means*: sensibilidade à *outliers*. Fonte: @Gonzalez2019](./img/03-est/K-means.png){#fig-kmeans}
+![Problema com *K-means*: sensibilidade à *outliers*. Fonte: @Gonzalez2019](./img/K-means.png){#fig-kmeans}
 
 ## *K-TAU*
 

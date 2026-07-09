@@ -301,6 +301,12 @@ window.Quarto = {
   <li><a href="#ajuste-do-semivariograma" id="toc-ajuste-do-semivariograma" class="nav-link" data-scroll-target="#ajuste-do-semivariograma"><span class="header-section-number">5.1.3</span> Ajuste do semivariograma</a></li>
   <li><a href="#execução-da-krigagem-no-saga-gis" id="toc-execução-da-krigagem-no-saga-gis" class="nav-link" data-scroll-target="#execução-da-krigagem-no-saga-gis"><span class="header-section-number">5.1.4</span> Execução da krigagem no SAGA GIS</a></li>
   <li><a href="#extração-dos-valores-krigados-para-os-imóveis" id="toc-extração-dos-valores-krigados-para-os-imóveis" class="nav-link" data-scroll-target="#extração-dos-valores-krigados-para-os-imóveis"><span class="header-section-number">5.1.5</span> Extração dos valores krigados para os imóveis</a></li>
+  <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados"><span class="header-section-number">5.1.6</span> Resultados</a>
+  <ul class="collapse">
+  <li><a href="#parâmetros-finais-dos-semivariogramas" id="toc-parâmetros-finais-dos-semivariogramas" class="nav-link" data-scroll-target="#parâmetros-finais-dos-semivariogramas"><span class="header-section-number">5.1.6.1</span> Parâmetros finais dos semivariogramas</a></li>
+  <li><a href="#ajustes-dos-semivariogramas" id="toc-ajustes-dos-semivariogramas" class="nav-link" data-scroll-target="#ajustes-dos-semivariogramas"><span class="header-section-number">5.1.6.2</span> Ajustes dos semivariogramas</a></li>
+  </ul></li>
+  <li><a href="#síntese-dos-resultados" id="toc-síntese-dos-resultados" class="nav-link" data-scroll-target="#síntese-dos-resultados"><span class="header-section-number">5.1.7</span> Síntese dos resultados</a></li>
   </ul></li>
   <li><a href="#sec-VUM2" id="toc-sec-VUM2" class="nav-link" data-scroll-target="#sec-VUM2"><span class="header-section-number">5.2</span> Valor Unitário do metro quadrado edificado</a>
   <ul>
@@ -341,7 +347,7 @@ window.Quarto = {
 </header>
 
 
-<p>Além da variável <code>PC</code> (<em>Padrão Construtivo</em>), obtida através de algoritmos de <em>clusterização</em>, conforme <a href="04_classificacao.html" class="quarto-xref"><span>Capítulo 4</span></a>, outras variáveis explicativas foram criadas visando a obtenção de um melhor ajuste para os modelos estatísticos, como a variável <code>RPCSMK</code> (<em>Renda per papita, em salários mínimos, krigada</em>) e <code>VUM2</code> (<em>Valor Unitário do metro quadrado edificado</em>).</p>
+<p>Além da variável <code>PC</code> (<em>Padrão Construtivo</em>), obtida através de algoritmos de <em>clusterização</em>, conforme capítulo anterior, outras variáveis explicativas foram criadas visando a obtenção de um melhor ajuste para os modelos estatísticos, como a variável <code>RPCSMK</code> (<em>Renda per papita, em salários mínimos, krigada</em>) e <code>VUM2</code> (<em>Valor Unitário do metro quadrado edificado</em>).</p>
 <section id="renda-krigada" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="renda-krigada"><span class="header-section-number">5.1</span> Renda Krigada</h2>
 <p>O processo de krigagem dos Lotes 1 e 2 teve como objetivo gerar superfícies interpoladas de renda média atribida aos setores censitários para os municípios selecionados e associar os valores estimados dessas superfícies aos pontos dos imóveis/anúncios OMI.</p>
@@ -435,11 +441,313 @@ window.Quarto = {
 <p><code>renda_krigada_ln</code></p>
 <p>A coluna foi mantida em escala logarítmica. Portanto, o produto final não corresponde à renda em escala original, mas ao valor interpolado de <code>renda_med_pct</code> após logaritmização.</p>
 <p>Essa etapa permitiu transformar a superfície interpolada em um atributo tabular associado a cada imóvel, viabilizando análises posteriores que relacionem os anúncios OMI aos valores estimados de renda no entorno de sua localização.</p>
+<p>2.6. Validação</p>
+<p>Foram realizadas validações visuais das superfícies krigadas por meio da sobreposição das superfícies geradas sobre imagens de satélite dos municípios.</p>
+<p>Essa validação teve caráter exploratório e permitiu avaliar a coerência espacial geral dos resultados interpolados em relação à configuração territorial observada visualmente.</p>
+<p>Além da validação visual, também foi utilizado o cálculo da significância como procedimento de validação dos ajustes realizados, em conjunto com os demais parâmetros documentados dos semivariogramas. A significância foi definida pela razão entre o efeito pepita e o patamar do ajuste. Considerou-se aceitável a significância no intervalo de <code>0,15</code> a <code>0,30</code>, buscando-se manter esse valor o mais próximo possível de <code>0,15</code>.</p>
+</section>
+<section id="resultados" class="level3" data-number="5.1.6">
+<h3 data-number="5.1.6" class="anchored" data-anchor-id="resultados"><span class="header-section-number">5.1.6</span> Resultados</h3>
+<p>O processo resultou em superfícies krigadas raster em GeoTIFF para os municípios selecionados dos Lotes 1 e 2 e em camadas municipais de imóveis/anúncios OMI com a renda krigada incorporada como atributo.</p>
+<p>Os três produtos principais foram:</p>
+<ol type="1">
+<li>superfície krigada raster de renda exportada em GeoTIFF;</li>
+<li>superfície krigada raster recortada pelo buffer;</li>
+<li>base de imóveis/anúncios OMI com a coluna <code>renda_krigada_ln</code>, consolidada em <code>dna_estimacao_consolidado_renda_krigada</code>.</li>
+</ol>
+<section id="parâmetros-finais-dos-semivariogramas" class="level4" data-number="5.1.6.1">
+<h4 data-number="5.1.6.1" class="anchored" data-anchor-id="parâmetros-finais-dos-semivariogramas"><span class="header-section-number">5.1.6.1</span> Parâmetros finais dos semivariogramas</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 4%">
+<col style="width: 11%">
+<col style="width: 19%">
+<col style="width: 15%">
+<col style="width: 8%">
+<col style="width: 17%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Município</th>
+<th style="text-align: right;">Lote</th>
+<th>Modelo</th>
+<th style="text-align: right;">Efeito pepita (C0)</th>
+<th style="text-align: right;">Patamar (C0+C)</th>
+<th style="text-align: right;">Alcance</th>
+<th style="text-align: right;">Distância máxima</th>
+<th style="text-align: right;">Lag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>belo_horizonte</td>
+<td style="text-align: right;">1</td>
+<td>esférico</td>
+<td style="text-align: right;">0.113</td>
+<td style="text-align: right;">0.556</td>
+<td style="text-align: right;">4278.831</td>
+<td style="text-align: right;">6000</td>
+<td style="text-align: right;">250</td>
+</tr>
+<tr class="even">
+<td>campo_grande</td>
+<td style="text-align: right;">1</td>
+<td>gaussiano</td>
+<td style="text-align: right;">0.085</td>
+<td style="text-align: right;">0.366</td>
+<td style="text-align: right;">5832.829</td>
+<td style="text-align: right;">6000</td>
+<td style="text-align: right;">400</td>
+</tr>
+<tr class="odd">
+<td>fortaleza</td>
+<td style="text-align: right;">1</td>
+<td>exponencial</td>
+<td style="text-align: right;">0.109</td>
+<td style="text-align: right;">0.419</td>
+<td style="text-align: right;">5716.310</td>
+<td style="text-align: right;">6000</td>
+<td style="text-align: right;">250</td>
+</tr>
+<tr class="even">
+<td>porto_velho</td>
+<td style="text-align: right;">1</td>
+<td>esférico</td>
+<td style="text-align: right;">0.059</td>
+<td style="text-align: right;">0.285</td>
+<td style="text-align: right;">4324.974</td>
+<td style="text-align: right;">4500</td>
+<td style="text-align: right;">371.389</td>
+</tr>
+<tr class="odd">
+<td>cuiaba</td>
+<td style="text-align: right;">2</td>
+<td>exponencial</td>
+<td style="text-align: right;">0.072</td>
+<td style="text-align: right;">0.479</td>
+<td style="text-align: right;">5555.004</td>
+<td style="text-align: right;">7200</td>
+<td style="text-align: right;">400</td>
+</tr>
+<tr class="even">
+<td>curitiba</td>
+<td style="text-align: right;">2</td>
+<td>gaussiano</td>
+<td style="text-align: right;">0.116</td>
+<td style="text-align: right;">0.482</td>
+<td style="text-align: right;">8896.143</td>
+<td style="text-align: right;">9000</td>
+<td style="text-align: right;">250.748</td>
+</tr>
+<tr class="odd">
+<td>manaus</td>
+<td style="text-align: right;">2</td>
+<td>exponencial</td>
+<td style="text-align: right;">0.073</td>
+<td style="text-align: right;">0.467</td>
+<td style="text-align: right;">6587.048</td>
+<td style="text-align: right;">8000</td>
+<td style="text-align: right;">229.627</td>
+</tr>
+<tr class="even">
+<td>salvador</td>
+<td style="text-align: right;">2</td>
+<td>exponencial</td>
+<td style="text-align: right;">0.092</td>
+<td style="text-align: right;">0.475</td>
+<td style="text-align: right;">3926.684</td>
+<td style="text-align: right;">5500</td>
+<td style="text-align: right;">161.020</td>
+</tr>
+</tbody>
+</table>
+<p>Fonte: <code>documentacao_variogramas_krigagem\01_tabela_parametros\tabela_parametros_krigagem_final.csv</code>.</p>
+</section>
+<section id="ajustes-dos-semivariogramas" class="level4" data-number="5.1.6.2">
+<h4 data-number="5.1.6.2" class="anchored" data-anchor-id="ajustes-dos-semivariogramas"><span class="header-section-number">5.1.6.2</span> Ajustes dos semivariogramas</h4>
+<p>Além da tabela de parâmetros finais, foram inseridos no relatório os prints dos semivariogramas ajustados no Smart-Map/QGIS. Essas imagens funcionam como evidência visual complementar dos modelos adotados e permitem conferir graficamente os ajustes realizados antes da inserção manual dos parâmetros no SAGA GIS 2.1.2.</p>
+<section id="belo-horizonte" class="level5" data-number="5.1.6.2.1">
+<h5 data-number="5.1.6.2.1" class="anchored" data-anchor-id="belo-horizonte"><span class="header-section-number">5.1.6.2.1</span> Belo Horizonte</h5>
+<p>Modelo adotado: esférico.<br>
+Efeito pepita (C0): 0.113.<br>
+Patamar (C0+C): 0.556.<br>
+Alcance: 4278.831 m.<br>
+Distância máxima: 6000 m.<br>
+Lag: 250 m.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/semivariogramas/belo_horizonte_semivariograma.png" class="img-fluid figure-img"></p>
+<figcaption>Semivariograma ajustado — Belo Horizonte</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/layouts/belo_horizonte_layout.png" class="img-fluid figure-img"></p>
+<figcaption>Layout da superfície krigada — Belo Horizonte</figcaption>
+</figure>
+</div>
+</section>
+<section id="campo-grande" class="level5" data-number="5.1.6.2.2">
+<h5 data-number="5.1.6.2.2" class="anchored" data-anchor-id="campo-grande"><span class="header-section-number">5.1.6.2.2</span> Campo Grande</h5>
+<p>Modelo adotado: gaussiano.<br>
+Efeito pepita (C0): 0.085.<br>
+Patamar (C0+C): 0.366.<br>
+Alcance: 5832.829 m.<br>
+Distância máxima: 6000 m.<br>
+Lag: 400 m.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/semivariogramas/campo_grande_semivariograma.png" class="img-fluid figure-img"></p>
+<figcaption>Semivariograma ajustado — Campo Grande</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/layouts/campo_grande_layout.png" class="img-fluid figure-img"></p>
+<figcaption>Layout da superfície krigada — Campo Grande</figcaption>
+</figure>
+</div>
+</section>
+<section id="fortaleza" class="level5" data-number="5.1.6.2.3">
+<h5 data-number="5.1.6.2.3" class="anchored" data-anchor-id="fortaleza"><span class="header-section-number">5.1.6.2.3</span> Fortaleza</h5>
+<p>Modelo adotado: exponencial.<br>
+Efeito pepita (C0): 0.109.<br>
+Patamar (C0+C): 0.419.<br>
+Alcance: 5716.310 m.<br>
+Distância máxima: 6000 m.<br>
+Lag: 250 m.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/semivariogramas/fortaleza_semivariograma.png" class="img-fluid figure-img"></p>
+<figcaption>Semivariograma ajustado — Fortaleza</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/layouts/fortaleza_layout.png" class="img-fluid figure-img"></p>
+<figcaption>Layout da superfície krigada — Fortaleza</figcaption>
+</figure>
+</div>
+</section>
+<section id="porto-velho" class="level5" data-number="5.1.6.2.4">
+<h5 data-number="5.1.6.2.4" class="anchored" data-anchor-id="porto-velho"><span class="header-section-number">5.1.6.2.4</span> Porto Velho</h5>
+<p>Modelo adotado: esférico.<br>
+Efeito pepita (C0): 0.059.<br>
+Patamar (C0+C): 0.285.<br>
+Alcance: 4324.974 m.<br>
+Distância máxima: 4500 m.<br>
+Lag: 371.389 m.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/semivariogramas/porto_velho_semivariograma.png" class="img-fluid figure-img"></p>
+<figcaption>Semivariograma ajustado — Porto Velho</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/layouts/porto_velho_layout.png" class="img-fluid figure-img"></p>
+<figcaption>Layout da superfície krigada — Porto Velho</figcaption>
+</figure>
+</div>
+</section>
+<section id="cuiabá" class="level5" data-number="5.1.6.2.5">
+<h5 data-number="5.1.6.2.5" class="anchored" data-anchor-id="cuiabá"><span class="header-section-number">5.1.6.2.5</span> Cuiabá</h5>
+<p>Modelo adotado: exponencial.<br>
+Efeito pepita (C0): 0.072.<br>
+Patamar (C0+C): 0.479.<br>
+Alcance: 5555.004 m.<br>
+Distância máxima: 7200 m.<br>
+Lag: 400 m.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/semivariogramas/cuiaba_semivariograma.png" class="img-fluid figure-img"></p>
+<figcaption>Semivariograma ajustado — Cuiabá</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/layouts/cuiaba_layout.png" class="img-fluid figure-img"></p>
+<figcaption>Layout da superfície krigada — Cuiabá</figcaption>
+</figure>
+</div>
+</section>
+<section id="curitiba" class="level5" data-number="5.1.6.2.6">
+<h5 data-number="5.1.6.2.6" class="anchored" data-anchor-id="curitiba"><span class="header-section-number">5.1.6.2.6</span> Curitiba</h5>
+<p>Modelo adotado: gaussiano.<br>
+Efeito pepita (C0): 0.116.<br>
+Patamar (C0+C): 0.482.<br>
+Alcance: 8896.143 m.<br>
+Distância máxima: 9000 m.<br>
+Lag: 250.748 m.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/semivariogramas/curitiba_semivariograma.png" class="img-fluid figure-img"></p>
+<figcaption>Semivariograma ajustado — Curitiba</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/layouts/curitiba_layout.png" class="img-fluid figure-img"></p>
+<figcaption>Layout da superfície krigada — Curitiba</figcaption>
+</figure>
+</div>
+</section>
+<section id="manaus" class="level5" data-number="5.1.6.2.7">
+<h5 data-number="5.1.6.2.7" class="anchored" data-anchor-id="manaus"><span class="header-section-number">5.1.6.2.7</span> Manaus</h5>
+<p>Modelo adotado: exponencial.<br>
+Efeito pepita (C0): 0.073.<br>
+Patamar (C0+C): 0.467.<br>
+Alcance: 6587.048 m.<br>
+Distância máxima: 8000 m.<br>
+Lag: 229.627 m.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/semivariogramas/manaus_semivariograma.png" class="img-fluid figure-img"></p>
+<figcaption>Semivariograma ajustado — Manaus</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/layouts/manaus_layout.png" class="img-fluid figure-img"></p>
+<figcaption>Layout da superfície krigada — Manaus</figcaption>
+</figure>
+</div>
+</section>
+<section id="salvador" class="level5" data-number="5.1.6.2.8">
+<h5 data-number="5.1.6.2.8" class="anchored" data-anchor-id="salvador"><span class="header-section-number">5.1.6.2.8</span> Salvador</h5>
+<p>Modelo adotado: exponencial.<br>
+Efeito pepita (C0): 0.092.<br>
+Patamar (C0+C): 0.475.<br>
+Alcance: 3926.684 m.<br>
+Distância máxima: 5500 m.<br>
+Lag: 161.020 m.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/semivariogramas/salvador_semivariograma.png" class="img-fluid figure-img"></p>
+<figcaption>Semivariograma ajustado — Salvador</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/layouts/salvador_layout.png" class="img-fluid figure-img"></p>
+<figcaption>Layout da superfície krigada — Salvador</figcaption>
+</figure>
+</div>
+</section>
+</section>
+</section>
+<section id="síntese-dos-resultados" class="level3" data-number="5.1.7">
+<h3 data-number="5.1.7" class="anchored" data-anchor-id="síntese-dos-resultados"><span class="header-section-number">5.1.7</span> Síntese dos resultados</h3>
+<p>O produto final efetivo do processo corresponde às bases municipais de imóveis/anúncios OMI com uma nova coluna de renda krigada, denominada <code>renda_krigada_ln</code>, em escala logarítmica, consolidada em <code>dna_estimacao_consolidado_renda_krigada</code>.</p>
+<p>Essa coluna foi obtida a partir da extração dos valores das superfícies krigadas raster geradas por krigagem ordinária local e exportadas em GeoTIFF no SAGA GIS. As superfícies foram ajustadas a partir dos centroides dos setores censitários, com base na variável geográfica <code>renda_med_pct</code>, previamente limpa e logaritmizada.</p>
+<p>As superfícies krigadas foram recortadas pelo buffer de <code>1.500 metros</code> construído ao redor do envoltório convexo dos pontos válidos e avaliadas visualmente por sobreposição a imagens de satélite dos municípios.</p>
 </section>
 </section>
 <section id="sec-VUM2" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="sec-VUM2"><span class="header-section-number">5.2</span> Valor Unitário do metro quadrado edificado</h2>
-<p>Conforme já explicitado no <a href="02_basico.html" class="quarto-xref"><span>Capítulo 2</span></a>,o método adotado neste projeto para a avaliação em massa dos imóveis é o <strong>método evolutivo</strong>. Assim, neste projeto, os dados coletados de imóveis edificados são utilizados de maneira secundária (ou auxiliar), de maneira que ajudem a explicar o fenômeno da <em>localização</em>.</p>
+<p>Conforme já explicitado no segundo capítulo, o método adotado neste projeto para a avaliação em massa dos imóveis é o <strong>método evolutivo</strong>. Assim, neste projeto, os dados coletados de imóveis edificados são utilizados de maneira secundária (ou auxiliar), de maneira que ajudem a explicar o fenômeno da <em>localização</em>.</p>
 <section id="modelo-linear" class="level3" data-number="5.2.1">
 <h3 data-number="5.2.1" class="anchored" data-anchor-id="modelo-linear"><span class="header-section-number">5.2.1</span> Modelo Linear</h3>
 <p>Para a obtenção da variável <code>VUM2</code> inicialmente é ajustado um modelo de regressão linear múltipla para descrever o comportamento do mercado imobiliário de casas e apartamentos.</p>
