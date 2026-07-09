@@ -53,7 +53,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./99_conclusao.html" rel="next">
+<link href="./06_ML.html" rel="next">
 <link href="./04_classificacao.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -153,7 +153,7 @@ window.Quarto = {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Caderno Metodológico</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/LabFSG-UFSC/VRCIB_Caderno_Metodologico/" title="Código fonte" class="quarto-navigation-tool px-1" aria-label="Código fonte"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/" title="Código fonte" class="quarto-navigation-tool px-1" aria-label="Código fonte"><i class="bi bi-github"></i></a>
     <div class="dropdown">
       <a href="" title="Baixar" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Baixar"><i class="bi bi-download"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
@@ -236,8 +236,26 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./06_ML.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Análise de dados com modelos de aprendizado de máquina</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_lotes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Análise de dados de lotes urbanos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_equacoes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Equações de Estimação</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./99_conclusao.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusão</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Conclusão</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -277,10 +295,11 @@ window.Quarto = {
   <li><a href="#sec-VUM2" id="toc-sec-VUM2" class="nav-link" data-scroll-target="#sec-VUM2"><span class="header-section-number">5.2</span> Valor Unitário do metro quadrado edificado</a>
   <ul>
   <li><a href="#modelo-linear" id="toc-modelo-linear" class="nav-link" data-scroll-target="#modelo-linear"><span class="header-section-number">5.2.1</span> Modelo Linear</a></li>
+  <li><a href="#geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" id="toc-geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" class="nav-link" data-scroll-target="#geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído"><span class="header-section-number">5.2.2</span> Geração da superfície de valores unitários de metro quadrado construído</a></li>
   </ul></li>
   <li><a href="#capital-sociespacial" id="toc-capital-sociespacial" class="nav-link" data-scroll-target="#capital-sociespacial"><span class="header-section-number">5.3</span> Capital Sociespacial</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Caderno_Metodologico/edit/main/05_variaveis.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/05_variaveis.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -316,8 +335,9 @@ window.Quarto = {
 <h3 data-number="5.2.1" class="anchored" data-anchor-id="modelo-linear"><span class="header-section-number">5.2.1</span> Modelo Linear</h3>
 <p>Para a obtenção da variável <code>VUM2</code> inicialmente é ajustado um modelo de regressão linear múltipla para descrever o comportamento do mercado imobiliário de casas e apartamentos.</p>
 <p>(CONTINUA)</p>
-<section id="geração-da-superfície-de-vu-de-m2-construído" class="level6" data-number="5.2.1.0.0.1">
-<h6 data-number="5.2.1.0.0.1" class="anchored" data-anchor-id="geração-da-superfície-de-vu-de-m2-construído"><span class="header-section-number">5.2.1.0.0.1</span> Geração da superfície de VU de m2 construído</h6>
+</section>
+<section id="geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="geração-da-superfície-de-valores-unitários-de-metro-quadrado-construído"><span class="header-section-number">5.2.2</span> Geração da superfície de valores unitários de metro quadrado construído</h3>
 <p>Após o ajuste do modelo de mínimos quadrados ordinários, os dados da amostra utilizados para o ajuste do modelo foram homogeneizados de acordo com fatores de homogeneização estimados diretamente do modelo. Por exemplo, para a variável área, foi derivado o fator área, conforme a <a href="#eq-FatorArea" class="quarto-xref">Equação&nbsp;<span>5.1</span></a>:</p>
 <p><span id="eq-FatorArea"><span class="math display">\[F_{\text{Área}} = \left ( \frac{A_\text{imóvel}}{100} \right)^{-0,25} \tag{5.1}\]</span></span></p>
 <p>Veja <a href="#nte-fatores" class="quarto-xref">Note&nbsp;<span>5.2</span></a> para entender com é feita a derivação racional de fatores de homogeneização.</p>
@@ -370,7 +390,6 @@ Nota&nbsp;5.2: Derivação Racional de Fatores
 <p><span class="math display">\[F_1 = \exp(\hat \beta_1 x_1); F_2 = \exp(\hat \beta_2 x_2); \ldots ; F_k =  \exp(\hat\beta_kx_k)\]</span></p>
 </div>
 </div>
-</section>
 </section>
 </section>
 <section id="capital-sociespacial" class="level2" data-number="5.3">
@@ -793,8 +812,8 @@ DRUCK, S.; CARVALHO, M. S.; CÂMARA, G.; MONTEIRO, A. MI. V. (ORG.). <strong>An�
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./99_conclusao.html" class="pagination-link" aria-label="Conclusão">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusão</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./06_ML.html" class="pagination-link" aria-label="Análise de dados com modelos de aprendizado de máquina">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Análise de dados com modelos de aprendizado de máquina</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -806,7 +825,7 @@ DRUCK, S.; CARVALHO, M. S.; CÂMARA, G.; MONTEIRO, A. MI. V. (ORG.). <strong>An�
 </div>   
     <div class="nav-footer-center">
 <p><img src="img/Logo com RFB e UFSC.png" class="img-fluid" width="250"></p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Caderno_Metodologico/edit/main/05_variaveis.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/edit/main/05_variaveis.qmd" class="toc-action"><i class="bi bi-github"></i>Editar essa página</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

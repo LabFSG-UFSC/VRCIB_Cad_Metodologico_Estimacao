@@ -5,10 +5,13 @@ linear generalizada, seguido de krigagem ordinária dos resíduos, resultando nu
 modelo final de regressão linear ordinária com os resíduos krigados como
 variável explicativa. Nas seções abaixo esse procedimento é detalhado.
 
-## Modelo linear generalizado
+## Modelos multiníveis
 
 
-## Krigagem dos resíduos
+## Homogeneização 
+
+
+## Geração da superfície de valores unitários de lotes
 
 
 ## Modelo final

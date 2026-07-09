@@ -25,6 +25,9 @@ book:
     - 03_limpeza.qmd
     - 04_classificacao.qmd
     - 05_variaveis.qmd
+    - 06_ML.qmd
+    - 07_lotes.qmd
+    - 08_equacoes.qmd
     - 99_conclusao.qmd
     - references.qmd
   appendices:
@@ -33,7 +36,7 @@ book:
     left: "© 2026 UFSC"
     center: "![](img/Logo com RFB e UFSC.png){width=250px}"
   downloads: [pdf, epub]
-  repo-url: https://github.com/LabFSG-UFSC/VRCIB_Caderno_Metodologico/
+  repo-url: https://github.com/LabFSG-UFSC/VRCIB_Cad_Metodologico_Estimacao/
   repo-actions: [edit]
   sharing: [twitter, facebook]
 

@@ -25,7 +25,7 @@ de casas e apartamentos.
 
 (CONTINUA)
 
-###### Geração da superfície de VU de m2 construído
+### Geração da superfície de valores unitários de metro quadrado construído
 
 Após o ajuste do modelo de mínimos quadrados ordinários, os dados da amostra
 utilizados para o ajuste do modelo foram homogeneizados de acordo com fatores de

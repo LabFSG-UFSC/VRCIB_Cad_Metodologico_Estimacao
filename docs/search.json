@@ -114,7 +114,7 @@
     "href": "05_variaveis.html#sec-VUM2",
     "title": "5  Geração de variáveis explicativas",
     "section": "5.2 Valor Unitário do metro quadrado edificado",
-    "text": "5.2 Valor Unitário do metro quadrado edificado\nConforme já explicitado no Capítulo 2,o método adotado neste projeto para a avaliação em massa dos imóveis é o método evolutivo. Assim, neste projeto, os dados coletados de imóveis edificados são utilizados de maneira secundária (ou auxiliar), de maneira que ajudem a explicar o fenômeno da localização.\n\n5.2.1 Modelo Linear\nPara a obtenção da variável VUM2 inicialmente é ajustado um modelo de regressão linear múltipla para descrever o comportamento do mercado imobiliário de casas e apartamentos.\n(CONTINUA)\n\n5.2.1.0.0.1 Geração da superfície de VU de m2 construído\nApós o ajuste do modelo de mínimos quadrados ordinários, os dados da amostra utilizados para o ajuste do modelo foram homogeneizados de acordo com fatores de homogeneização estimados diretamente do modelo. Por exemplo, para a variável área, foi derivado o fator área, conforme a Equação 5.1:\n\\[F_{\\text{Área}} = \\left ( \\frac{A_\\text{imóvel}}{100} \\right)^{-0,25} \\tag{5.1}\\]\nVeja Note 5.2 para entender com é feita a derivação racional de fatores de homogeneização.\nApós o procedimento de homoegeneização, foi gerada uma superfície de valores de metro quadrado construído com os dados homogeneizados através do algoritmo IDW (inverse distance weighting).\n\n\n\n\n\n\nNota 5.1: Inverse Distance Weighting\n\n\n\nSegundo DRUCK et al. (2004, p. 83), “uma alternativa simples para gerar uma superfície bidimensional” consiste em ajustar uma função bidimensional sobre as amostras, prevendo valores em uma grade (\\(\\hat z_i\\)), com a seguinte formulação:\n\\[\n\\hat z_i = \\frac{\\sum_{j = 1}^n w_{ij}z_j}{\\sum_{j=1}^n w_{ij}}\n\\tag{5.2}\\]\nEm que:\n\n\\(z_j\\) é o valor da cota (VU) de uma amostra vizinha do ponto \\(i\\) da grade;\n\\(w_{ij}\\) é um fator de ponderação.\n\nCom base neste esquema básico supra-mencionado, é possível gerar vários interpoladores (vizinho mais próximo, média simples ou média ponderada). A ponderação mais usada consiste em adotar pesos que variam com o inverso de uma potência \\(k\\) da distância euclidiana do ponto da amostra ao ponto da grade em que se deseja prever valores (\\(d_{ij}\\)), assim:\n\\[\nw_{ij} = \\frac{1}{d_{ij}^k}\n\\tag{5.3}\\]\nEm que: - \\(d_{ij} = \\sqrt{(x_i-x_j)^2 + (y_i - y_j)^2}\\)\n\n\n\n\n\n\n\n\nNota 5.2: Derivação Racional de Fatores\n\n\n\nA derivação racional de fatores de homogeneização é feita de acordo com os coeficientes estimados em um modelo de regressão linear múltipla (RLM).\nOs fatores serão aditivos quando o modelo RLM for ajustado na escala de preços unitários (PU), ou serão multiplicativos quando o modelo RLM for ajustado com a transformação da variável dependente para a escala logaritmica, o que é usual na Engenharia de Avaliações.\nPara entender, basta perceber que, para um modelo ajustado na escala logaritmica, tem-se:\n\\[\\widehat{\\log(PU)} = \\hat \\beta_0 + \\hat \\beta_1 x_1 + \\ldots + \\hat\\beta_kx_k \\tag{5.4}\\]\nEfetuando a exponenciação em ambos os lados de Equação 5.4, tem-se:\n\\[\\widehat{PU} = \\exp(\\hat \\beta_0 + \\hat \\beta_1 x_1 + \\ldots + \\hat\\beta_kx_k) \\tag{5.5}\\]\nComo a exponencial da soma é o produto das exponenciais, a Equação 5.5 torna-se:\n\\[\\widehat{PU} = \\exp(\\hat \\beta_0)\\cdot\\exp(\\hat \\beta_1 x_1)\\cdot \\ldots \\cdot \\exp(\\hat\\beta_kx_k) \\tag{5.6}\\]\nDonde entende-se o motivo dos fatores derivados com este modelo serem multiplicativos, pois, deste modelo, deduz-se:\n\\[F_1 = \\exp(\\hat \\beta_1 x_1); F_2 = \\exp(\\hat \\beta_2 x_2); \\ldots ; F_k =  \\exp(\\hat\\beta_kx_k)\\]",
+    "text": "5.2 Valor Unitário do metro quadrado edificado\nConforme já explicitado no Capítulo 2,o método adotado neste projeto para a avaliação em massa dos imóveis é o método evolutivo. Assim, neste projeto, os dados coletados de imóveis edificados são utilizados de maneira secundária (ou auxiliar), de maneira que ajudem a explicar o fenômeno da localização.\n\n5.2.1 Modelo Linear\nPara a obtenção da variável VUM2 inicialmente é ajustado um modelo de regressão linear múltipla para descrever o comportamento do mercado imobiliário de casas e apartamentos.\n(CONTINUA)\n\n\n5.2.2 Geração da superfície de valores unitários de metro quadrado construído\nApós o ajuste do modelo de mínimos quadrados ordinários, os dados da amostra utilizados para o ajuste do modelo foram homogeneizados de acordo com fatores de homogeneização estimados diretamente do modelo. Por exemplo, para a variável área, foi derivado o fator área, conforme a Equação 5.1:\n\\[F_{\\text{Área}} = \\left ( \\frac{A_\\text{imóvel}}{100} \\right)^{-0,25} \\tag{5.1}\\]\nVeja Note 5.2 para entender com é feita a derivação racional de fatores de homogeneização.\nApós o procedimento de homoegeneização, foi gerada uma superfície de valores de metro quadrado construído com os dados homogeneizados através do algoritmo IDW (inverse distance weighting).\n\n\n\n\n\n\nNota 5.1: Inverse Distance Weighting\n\n\n\nSegundo DRUCK et al. (2004, p. 83), “uma alternativa simples para gerar uma superfície bidimensional” consiste em ajustar uma função bidimensional sobre as amostras, prevendo valores em uma grade (\\(\\hat z_i\\)), com a seguinte formulação:\n\\[\n\\hat z_i = \\frac{\\sum_{j = 1}^n w_{ij}z_j}{\\sum_{j=1}^n w_{ij}}\n\\tag{5.2}\\]\nEm que:\n\n\\(z_j\\) é o valor da cota (VU) de uma amostra vizinha do ponto \\(i\\) da grade;\n\\(w_{ij}\\) é um fator de ponderação.\n\nCom base neste esquema básico supra-mencionado, é possível gerar vários interpoladores (vizinho mais próximo, média simples ou média ponderada). A ponderação mais usada consiste em adotar pesos que variam com o inverso de uma potência \\(k\\) da distância euclidiana do ponto da amostra ao ponto da grade em que se deseja prever valores (\\(d_{ij}\\)), assim:\n\\[\nw_{ij} = \\frac{1}{d_{ij}^k}\n\\tag{5.3}\\]\nEm que: - \\(d_{ij} = \\sqrt{(x_i-x_j)^2 + (y_i - y_j)^2}\\)\n\n\n\n\n\n\n\n\nNota 5.2: Derivação Racional de Fatores\n\n\n\nA derivação racional de fatores de homogeneização é feita de acordo com os coeficientes estimados em um modelo de regressão linear múltipla (RLM).\nOs fatores serão aditivos quando o modelo RLM for ajustado na escala de preços unitários (PU), ou serão multiplicativos quando o modelo RLM for ajustado com a transformação da variável dependente para a escala logaritmica, o que é usual na Engenharia de Avaliações.\nPara entender, basta perceber que, para um modelo ajustado na escala logaritmica, tem-se:\n\\[\\widehat{\\log(PU)} = \\hat \\beta_0 + \\hat \\beta_1 x_1 + \\ldots + \\hat\\beta_kx_k \\tag{5.4}\\]\nEfetuando a exponenciação em ambos os lados de Equação 5.4, tem-se:\n\\[\\widehat{PU} = \\exp(\\hat \\beta_0 + \\hat \\beta_1 x_1 + \\ldots + \\hat\\beta_kx_k) \\tag{5.5}\\]\nComo a exponencial da soma é o produto das exponenciais, a Equação 5.5 torna-se:\n\\[\\widehat{PU} = \\exp(\\hat \\beta_0)\\cdot\\exp(\\hat \\beta_1 x_1)\\cdot \\ldots \\cdot \\exp(\\hat\\beta_kx_k) \\tag{5.6}\\]\nDonde entende-se o motivo dos fatores derivados com este modelo serem multiplicativos, pois, deste modelo, deduz-se:\n\\[F_1 = \\exp(\\hat \\beta_1 x_1); F_2 = \\exp(\\hat \\beta_2 x_2); \\ldots ; F_k =  \\exp(\\hat\\beta_kx_k)\\]",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Geração de variáveis explicativas</span>"
     ]
@@ -130,13 +130,63 @@
     ]
   },
   {
+    "objectID": "06_ML.html",
+    "href": "06_ML.html",
+    "title": "6  Análise de dados com modelos de aprendizado de máquina",
+    "section": "",
+    "text": "(CAROL)",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Análise de dados com modelos de aprendizado de máquina</span>"
+    ]
+  },
+  {
+    "objectID": "07_lotes.html",
+    "href": "07_lotes.html",
+    "title": "7  Análise de dados de lotes urbanos",
+    "section": "",
+    "text": "7.1 Modelos multiníveis\nOs dados de lotes urbanos foram analisados a partir de modelos de regressão linear generalizada, seguido de krigagem ordinária dos resíduos, resultando num modelo final de regressão linear ordinária com os resíduos krigados como variável explicativa. Nas seções abaixo esse procedimento é detalhado.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+    ]
+  },
+  {
+    "objectID": "07_lotes.html#homogeneização",
+    "href": "07_lotes.html#homogeneização",
+    "title": "7  Análise de dados de lotes urbanos",
+    "section": "7.2 Homogeneização",
+    "text": "7.2 Homogeneização",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+    ]
+  },
+  {
+    "objectID": "07_lotes.html#geração-da-superfície-de-valores-unitários-de-lotes",
+    "href": "07_lotes.html#geração-da-superfície-de-valores-unitários-de-lotes",
+    "title": "7  Análise de dados de lotes urbanos",
+    "section": "7.3 Geração da superfície de valores unitários de lotes",
+    "text": "7.3 Geração da superfície de valores unitários de lotes",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+    ]
+  },
+  {
+    "objectID": "07_lotes.html#modelo-final",
+    "href": "07_lotes.html#modelo-final",
+    "title": "7  Análise de dados de lotes urbanos",
+    "section": "7.4 Modelo final",
+    "text": "7.4 Modelo final",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Análise de dados de lotes urbanos</span>"
+    ]
+  },
+  {
     "objectID": "99_conclusao.html",
     "href": "99_conclusao.html",
-    "title": "6  Conclusão",
+    "title": "9  Conclusão",
     "section": "",
     "text": "Neste caderno mostrou-se …",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Conclusão</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Conclusão</span>"
     ]
   },
   {
