@@ -582,11 +582,11 @@ cálculos são efetuados sobre os vértices, e não sobre as arestas, a populaç
 cada vértice foi estimada como a média da população de cada aresta a ele
 relacionada.
 
-Para os cálculos foram empregados, no R, os pacotes "sfnetworks" para a
-conversão da rede viária em uma estrutura de rede espacial, e "igraph",
+Para os cálculos foram empregados, no R, os pacotes `sfnetworks` para a
+conversão da rede viária em uma estrutura de rede espacial, e `igraph`,
 utilizado para conversão da rede em grafos.
 
 As medidas foram posteriormente normalizadas para o intervalo \[0, 1\],
 utilizando o percentil acumulado (*percent rank*). Como a centralidade exibe
 distribuição potencial, com forte assimetria positiva, aplicou-se previamente à
-normalização a transformação \[ln(Cen \+ 1)\].
+normalização a transformação $\ln(\text{Cen} + 1)$.
